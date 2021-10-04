@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-// Made by following tutorial: https://www.youtube.com/watch?v=I6T1En5cPq4
+// Made in part by following tutorial: https://www.youtube.com/watch?v=I6T1En5cPq4
 public class MapGenerator : MonoBehaviour
 {
     public GameObject MapTile;
@@ -12,6 +12,25 @@ public class MapGenerator : MonoBehaviour
 
     [SerializeField] private int mapWidth;
     [SerializeField] private int mapHeight;
+
+    //TODO: allow custom map design
+    //[SerializeField]
+    //private int[,] mapDesign = new int[,] {
+    //    { 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0 },
+    //    { 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0 },
+    //    { 0, 0, 1, 1, 1, 1, 1, 1, 1, 0, 0 },
+    //    { 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0 },
+    //    { 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0 },
+    //    { 0, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0 },
+    //    { 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0 },
+    //    { 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0 },
+    //    { 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0 },
+    //    { 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0 },
+    //};
+
+
+    [SerializeField] private float originX = -6.5f;
+    [SerializeField] private float originY = -4.5f;
 
     public static List<GameObject> mapTiles = new List<GameObject>();
     public static List<GameObject> pathTiles = new List<GameObject>();
@@ -29,7 +48,7 @@ public class MapGenerator : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        generateMap();
+        generateRandomMap();
     }
 
     private List<GameObject> getTopEdgeTiles()
@@ -83,21 +102,74 @@ public class MapGenerator : MonoBehaviour
 
     }
 
-    private void generateMap()
+    // FIXME: this is currently not working
+    private void generatePlannedMap()
     {
-        for(int y=0; y < mapHeight; y++)
+        //bool startTileFound = false;
+        //bool endTileFound = false;
+        //mapHeight = mapDesign.Length;
+        //mapWidth = mapDesign.GetLength(0);
+        //for (int i = 0; i < mapDesign.Length; i++)
+        //{
+        //    GameObject newTile = Instantiate(MapTile);
+        //    newTile.transform.position = new Vector2(originX + x, originY + y);
+        //    if (!startTileFound && mapDesign[i] > 0)
+        //    {
+        //        startTileFound = true;
+        //        startTile
+        //    }
+
+        //    newTile.transform.position = new Vector2(originX + x, originY + y);
+        //    mapTiles.Add(newTile);
+        //}
+
+        //for (int y = 0; y < mapHeight; y++)
+        //{
+        //    for (int x = 0; x < mapWidth; x++)
+        //    {
+        //        GameObject newTile = Instantiate(MapTile);
+
+        //        newTile.transform.position = new Vector2(originX + x, originY + y);
+        //        if (mapDesign[x, y] > 0)
+        //        {
+        //            startTileFound = true;
+        //            startTile = newTile;
+        //            pathTiles.Add(newTile);
+        //        }
+        //        mapTiles.Add(newTile);
+
+        //        ////assume endTile has to be in first row, and there is only one
+        //        //if(y == 0 && mapDesign[x, y] > 0)
+        //        //{
+        //        //    endTileFound = true;
+        //        //    endTile
+        //        //}
+        //    }
+        //}
+
+
+        //int startTilePos = topEdgeTiles.Find(;
+    }
+
+   
+    private void generateRandomMap()
+    {
+        for(int y = 0; y < mapHeight; y++)
         {
-            for(int x = 0; x < mapWidth; x++)
+            for (int x = 0; x < mapWidth; x++)
             {
                 GameObject newTile = Instantiate(MapTile);
-
-                newTile.transform.position = new Vector2(x, y);
+                newTile.transform.position = new Vector2(originX + x, originY + y);
                 mapTiles.Add(newTile);
             }
         }
+
         generatePath();
     }
 
+    /* TODO: this can be deleted once generatePlannedMap() is working, 
+     * was mostly made when following tutorial, but do not actually want random map generation
+     */
     private void generatePath()
     {
         List<GameObject> topEdgeTiles = getTopEdgeTiles();
@@ -161,8 +233,8 @@ public class MapGenerator : MonoBehaviour
         }
         pathTiles.Add(endTile);
 
-        Debug.Log(pathTiles.Count);
-        Debug.Log(PathColor);
+        //Debug.Log(pathTiles.Count);
+        //Debug.Log(PathColor);
 
         foreach(GameObject obj in pathTiles)
         {
