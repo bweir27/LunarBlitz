@@ -7,12 +7,17 @@ public class MapGenerator : MonoBehaviour
 {
     public GameObject MapTile;
     public Color PathColor;
+    public Color StartTileColor;
+    public Color EndTileColor;
 
     [SerializeField] private int mapWidth;
     [SerializeField] private int mapHeight;
 
-    private List<GameObject> mapTiles = new List<GameObject>();
-    private List<GameObject> pathTiles = new List<GameObject>();
+    public static List<GameObject> mapTiles = new List<GameObject>();
+    public static List<GameObject> pathTiles = new List<GameObject>();
+
+    public static GameObject startTile;
+    public static GameObject endTile;
 
     private bool reachedX = false;
     private bool reachedY = false;
@@ -50,7 +55,7 @@ public class MapGenerator : MonoBehaviour
         return edgeTiles;
     }
 
-
+    // Helper function for path generation
     private void moveDown()
     {
         pathTiles.Add(currentTile);
@@ -59,6 +64,7 @@ public class MapGenerator : MonoBehaviour
         currentTile = mapTiles[nextIndex];
     }
 
+    // Helper function for path generation
     private void moveLeft()
     {
         pathTiles.Add(currentTile);
@@ -67,6 +73,7 @@ public class MapGenerator : MonoBehaviour
         currentTile = mapTiles[nextIndex];
     }
 
+    // Helper function for path generation
     private void moveRight()
     {
         pathTiles.Add(currentTile);
@@ -99,8 +106,8 @@ public class MapGenerator : MonoBehaviour
         int startTilePos = Random.Range(0, mapWidth);
         int endTilePos = Random.Range(0, mapWidth);
 
-        GameObject startTile = topEdgeTiles[startTilePos];
-        GameObject endTile = bottomEdgeTiles[endTilePos];
+        startTile = topEdgeTiles[startTilePos];
+        endTile = bottomEdgeTiles[endTilePos];
 
         currentTile = startTile;
 
@@ -159,12 +166,11 @@ public class MapGenerator : MonoBehaviour
 
         foreach(GameObject obj in pathTiles)
         {
-            //Destroy(obj);
-            Debug.Log(obj);
             obj.GetComponent<SpriteRenderer>().color = PathColor;
         }
 
-
+        startTile.GetComponent<SpriteRenderer>().color = StartTileColor;
+        endTile.GetComponent<SpriteRenderer>().color = EndTileColor;
     }
 
 }

@@ -237,6 +237,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   MapTile: {fileID: 8421604774087507339, guid: a1c6305a04a1e4b3b9398205eff383e6, type: 3}
   PathColor: {r: 0.5283019, g: 0.4519945, b: 0.34140262, a: 1}
+  StartTileColor: {r: 0.3066733, g: 1, b: 0, a: 1}
+  EndTileColor: {r: 0.9716981, g: 0.45407498, b: 0.33459416, a: 1}
   mapWidth: 8
   mapHeight: 8
 --- !u!4 &1993061478
