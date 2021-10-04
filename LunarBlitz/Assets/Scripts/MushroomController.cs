@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class MushroomController : Enemy
 {
-    [SerializeField] private Sprite mobSkin;
+    //[SerializeField] private Sprite mobSkin;
 
     // Start is called before the first frame update
     void Start()
