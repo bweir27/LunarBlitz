@@ -42,3 +42,9 @@ TagManager:
   - name: Default
     uniqueID: 0
     locked: 0
+  - name: Cannon
+    uniqueID: 581864795
+    locked: 0
+  - name: Ground
+    uniqueID: 438816041
+    locked: 0
