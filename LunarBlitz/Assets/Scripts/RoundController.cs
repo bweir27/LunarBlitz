@@ -4,7 +4,8 @@ using UnityEngine;
 
 public class RoundController : MonoBehaviour
 {
-    public GameObject basicEnemy;
+    public GameObject mushroomMob;
+    public GameObject flyingEyeMob;
 
     public float timeBetweenWaves;
     public float timeBeforeRoundStarts;

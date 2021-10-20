@@ -7,6 +7,12 @@ TagManager:
   - Enemy
   - Projectile
   - GameManager
+  - TowerName
+  - TowerCost
+  - TowerPreview
+  - BuildingBtn
+  - TowerBuyBtn
+  - TowerRangeDisplay
   layers:
   - Default
   - TransparentFX
@@ -16,8 +22,8 @@ TagManager:
   - UI
   - 
   - 
-  - 
-  - 
+  - Tower
+  - DummyTowerPlacement
   - 
   - 
   - 
@@ -58,4 +64,7 @@ TagManager:
     locked: 0
   - name: Enemy
     uniqueID: 2833482079
+    locked: 0
+  - name: DummyTowerPlacement
+    uniqueID: 1033353063
     locked: 0
