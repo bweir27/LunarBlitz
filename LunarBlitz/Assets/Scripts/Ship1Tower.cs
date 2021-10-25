@@ -34,8 +34,8 @@ public class Ship1Tower : Tower
     protected override void shoot()
     {
         base.shoot();
-        Debug.Log(bullet);
-        Debug.Log("Fire!");
+        //Debug.Log(bullet);
+        //Debug.Log("Fire!");
         //create Bullet
         GameObject newBullet = Instantiate(
             bullet,
