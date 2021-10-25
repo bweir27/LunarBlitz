@@ -97,8 +97,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b531d263c9df641189d43ef036c169b3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  enemyHealth: 50
+  enemyHealth: 75
+  startHealth: 75
   movementSpeed: 0.5
+  mobSkin: {fileID: 0}
+  animator: {fileID: 0}
+  killReward: 25
+  damage: 1
 --- !u!61 &5594112485197920983
 BoxCollider2D:
   m_ObjectHideFlags: 0

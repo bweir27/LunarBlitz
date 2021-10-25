@@ -5,18 +5,21 @@ using UnityEngine;
 // Made in part by following tutorial: https://www.youtube.com/watch?v=iKtxC4mzpaI&t=0s
 public class Enemy : MonoBehaviour
 {
-    [SerializeField] private float enemyHealth;
-    [SerializeField] private float startHealth; // TODO: Will be used for healthbar
+    [SerializeField] protected float enemyHealth;
+    [SerializeField] protected float startHealth; // TODO: Will be used for healthbar
 
-    [SerializeField] private float movementSpeed;
+    [SerializeField] protected float movementSpeed;
 
-    [SerializeField] private Sprite mobSkin;
-    [SerializeField] private Animator animator; //TODO: attach animations to mobs
+    [SerializeField] protected Sprite mobSkin;
+    [SerializeField] protected Animator animator; //TODO: attach animations to mobs
 
-    private int killReward; // The amount of money the played gets when this enemy is killed
-    private int damage; // The amount of damage the enemy does when it reached the end
+    protected PlayerController playerController;
+    public int killReward; // The amount of money the played gets when this enemy is killed
 
-    private GameObject targetTile;
+    protected bool hasReachedEnd = false;
+    public int damage; // The amount of damage the enemy does when it reached the end
+
+    public GameObject targetTile;
 
     void Awake()
     {
@@ -24,20 +27,21 @@ public class Enemy : MonoBehaviour
         Enemies.enemies.Add(gameObject);
     }
 
-    void Start()
+    public virtual void Start()
     {
         //Enemies.enemies.Add(gameObject);
         initEnemy();
+        playerController = FindObjectOfType<PlayerController>();
     }
 
-    void Update()
+    public virtual void Update()
     {
         checkPosition();
         moveEnemy();
         takeDamage(0);
     }
 
-    private void initEnemy()
+    protected virtual void initEnemy()
     {
         targetTile = MapGenerator.startTile;
         if(mobSkin != null)
@@ -46,7 +50,7 @@ public class Enemy : MonoBehaviour
         }
     }
 
-    public void takeDamage(float amount)
+    public virtual void takeDamage(float amount)
     {
         enemyHealth -= amount;
 
@@ -64,22 +68,30 @@ public class Enemy : MonoBehaviour
 
     }
 
-    private void die()
+    protected virtual void die()
     {
+        // reward gold 
+        playerController.AddMoney(killReward);
+        Debug.Log("Enemy killed, rewarded + " + killReward);
         //TODO: animate death
         Enemies.enemies.Remove(gameObject);
         Destroy(transform.gameObject);
     }
 
-    private void moveEnemy()
+    protected virtual void moveEnemy()
     {
-        transform.position = Vector3.MoveTowards(
+        
+        if(targetTile != null && gameObject != null)
+        {
+            transform.position = Vector3.MoveTowards(
             transform.position,
             targetTile.transform.position,
             movementSpeed * Time.deltaTime);
+        }
+        
     }
 
-    private void checkPosition()
+    protected virtual void checkPosition()
     {
         // Ensure target tile exists
         if(targetTile != null && targetTile != MapGenerator.endTile)
@@ -92,6 +104,22 @@ public class Enemy : MonoBehaviour
                 int currentIndex = MapGenerator.pathTiles.IndexOf(targetTile);
 
                 targetTile = MapGenerator.pathTiles[currentIndex + 1];
+            }
+        }
+
+        // Detect when mob reaches target tile + decement numLives
+        if(targetTile == MapGenerator.endTile)
+        {
+            // Calculate distance between enemy's position and targetTile's position
+            float distance = (transform.position - targetTile.transform.position).magnitude;
+
+            if (distance < 0.001f && !hasReachedEnd)
+            {
+                playerController.loseLives(damage);
+                hasReachedEnd = true;
+                // destroy the mob
+                Enemies.enemies.Remove(gameObject);
+                Destroy(transform.gameObject);
             }
         }
     }
