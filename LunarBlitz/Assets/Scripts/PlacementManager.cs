@@ -115,6 +115,7 @@ public class PlacementManager : MonoBehaviour
                     newTowerObj.layer = LayerMask.NameToLayer("Tower");
                     newTowerObj.transform.position = hoverTile.transform.position;
 
+
                     EndBuilding();
                     shopManager.BuyTower(towerToBePlaced);
                 }

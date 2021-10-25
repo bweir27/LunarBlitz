@@ -33,7 +33,7 @@ public class FlyingEyeController : Enemy
 
         // reward gold 
         playerController.AddMoney(killReward);
-        Debug.Log("FlyingEye killed, rewarded " + killReward);
+        //Debug.Log("FlyingEye killed, rewarded " + killReward);
         //TODO: animate death
         animator.SetBool("IsDead", true);
         Destroy(transform.gameObject);

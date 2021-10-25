@@ -32,6 +32,10 @@ public class Tower : MonoBehaviour
     void Start()
     {
         nextTimeToShoot = Time.time;
+        if(camera == null)
+        {
+            camera = Camera.main;
+        }
 
         // make Tower range display invisible onInit
         rangeDisplay = GameObject.FindGameObjectWithTag("TowerRangeDisplay");
@@ -40,6 +44,7 @@ public class Tower : MonoBehaviour
         Color c = rangeRenderer.color;
         c.a = 0;
         rangeRenderer.color = c;
+        
     }
 
     // Update is called once per frame
@@ -70,58 +75,31 @@ public class Tower : MonoBehaviour
 
         if (hit != null && hit.collider != null)
         {
-            Debug.Log("Hit!" + hit.collider.gameObject.name);
-            if (hit.collider.gameObject.name == gameObject.name)
-            {
-                rangeRenderer.color = rangeDisplayColor;
-            }
+            //FIXME: hover over tower to show range
+            //Debug.Log("Hit!" + hit.collider.gameObject.name);
+            //if (hit.collider.gameObject.name == gameObject.name)
+            //{
+            //    rangeRenderer.color = rangeDisplayColor;
+            //}
             //else if(if (hit.collider.gameObject.name == gameObject.name))
-            else
-            {
-                SpriteRenderer temp = hit.collider.gameObject.GetComponent<SpriteRenderer>();
-                Color b = Color.blue;
-                temp.color = b;
-                Color invis = rangeDisplayColor;
-                invis.a = 0;
-                rangeRenderer.color = invis;
-            }
+            //else
+            //{
+
+            //SpriteRenderer temp = hit.collider.gameObject.GetComponent<SpriteRenderer>();
+            ////Color b = Color.blue;
+            //temp.color = b;
+            //Color invis = rangeDisplayColor;
+            //invis.a = 0;
+            //rangeRenderer.color = invis;
+            //}
         }
         else
         {
-            GetComponent<SpriteRenderer>().color = Color.white;
+            //GetComponent<SpriteRenderer>().color = Color.white;
         }
+        //rangeRenderer.color = Color.clear;
     }
 
-    //TODO: target enemy closest to end -> not closest to tower
-    //private void updateNearestEnemy()
-    //{
-    //    GameObject currentNearestEnemy = null;
-
-    //    float distance = Mathf.Infinity;
-
-    //    foreach(GameObject enemy in Enemies.enemies)
-    //    {
-    //        if (enemy != null)
-    //        {
-    //            float _distance = (transform.position - enemy.transform.position).magnitude;
-    //            if (_distance < distance)
-    //            {
-    //                distance = _distance;
-    //                currentNearestEnemy = enemy;
-    //            }
-    //        }
-    //    }
-
-    //    if(distance <= range)
-    //    {
-    //        currentTarget = currentNearestEnemy;
-    //    }
-    //    else
-    //    {
-    //        currentTarget = null;
-    //    }
-    //    //Debug.Log("CurrentTarget: " + currentTarget);
-    //}
 
     private void updateLeadEnemy()
     {
@@ -136,10 +114,9 @@ public class Tower : MonoBehaviour
             if (enemy != null)
             {
                 float _distance = (transform.position - enemy.transform.position).magnitude;
-
-                if (distance <= range)
+                // ensure enemy is within range of tower
+                if (_distance <= range)
                 {
-                    
                     int tilePos = MapGenerator.pathTiles.IndexOf(enemy.GetComponent<Enemy>().targetTile);
                     if (tilePos >= _maxTilePos)
                     {
@@ -153,14 +130,13 @@ public class Tower : MonoBehaviour
                 {
                     enemy.GetComponent<SpriteRenderer>().color = Color.white;
                 }
-                
             }
         }
 
         if (currentLeadEnemyInRange != null)
         {
             currentTarget = currentLeadEnemyInRange;
-            currentTarget.GetComponent<SpriteRenderer>().color = Color.blue;
+            //currentTarget.GetComponent<SpriteRenderer>().color = Color.blue;
         }
         else
         {

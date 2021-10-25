@@ -43,7 +43,7 @@ public class UIManager : MonoBehaviour
     {
         _livesRemaining = lives;
         LivesRemainingText.text = "Lives: " + _livesRemaining.ToString();
-        Debug.Log("Lives remaining: " + _livesRemaining);
+        //Debug.Log("Lives remaining: " + _livesRemaining);
 
         //TODO: if lives = 0, show "Game Over" Display
     }
@@ -52,14 +52,13 @@ public class UIManager : MonoBehaviour
     {
         _gold = goldAmt;
         GoldRemainingText.text = _gold.ToString();
-        Debug.Log("GOLD remaining: " + _gold);
+        //Debug.Log("GOLD remaining: " + _gold);
     }
 
     public void updateRoundNum(int currRound, int numRounds)
     {
-
         _roundNum = currRound;
         RoundNumberText.text = "Round: " + _roundNum.ToString() + "/" + numRounds.ToString();
-        Debug.Log("Wave updated");
+        //Debug.Log("Wave updated");
     }
 }

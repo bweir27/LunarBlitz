@@ -122,8 +122,9 @@ MonoBehaviour:
   movementSpeed: 0.55
   mobSkin: {fileID: 0}
   animator: {fileID: 3703495712184774299}
-  killReward: 20
+  killReward: 15
   damage: 1
+  targetTile: {fileID: 0}
 --- !u!61 &8401127333415428838
 BoxCollider2D:
   m_ObjectHideFlags: 0

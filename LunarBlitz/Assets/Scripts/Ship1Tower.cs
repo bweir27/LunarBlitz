@@ -8,6 +8,10 @@ public class Ship1Tower : Tower
     public Transform barrel;
     public GameObject bullet;
 
+    private void Awake()
+    {
+        
+    }
     // Update is called once per frame
     protected override void Update()
     {

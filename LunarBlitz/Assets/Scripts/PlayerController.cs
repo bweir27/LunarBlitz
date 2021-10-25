@@ -38,7 +38,7 @@ public class PlayerController : MonoBehaviour
     public void RemoveMoney(int amt)
     {
         _currGold -= amt;
-        Debug.Log("Removed " + amt + " Gold, has: " + GetCurrentGold());
+        //Debug.Log("Removed " + amt + " Gold, has: " + GetCurrentGold());
         UpdateGoldUI();
     }
 

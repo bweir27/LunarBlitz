@@ -165,8 +165,6 @@ public class MapGenerator : MonoBehaviour
                 TileBase tile = allTiles[x + y * bounds.size.x];
                 if (tile != null)
                 {
-                   
-                    Debug.Log("x:" + x + " y:" + y + " tile:" + tile.name);
                     GameObject newTile = Instantiate(MapTile);
                     newTile.transform.position = new Vector2(orX + x, orY + y);
                     if (tile.name.EndsWith(PathTileSprite.name.Substring(PathTileSprite.name.Length - 4)))

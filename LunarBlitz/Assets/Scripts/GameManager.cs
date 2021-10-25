@@ -5,7 +5,7 @@ using UnityEngine;
 public class GameManager : MonoBehaviour
 {
     public int roundNum = 0;
-    public int NumberOfRounds = 5;
+    public int NumberOfRounds = 6;
     public int[] numMobsPerRound = {
         5,
         10,
@@ -19,7 +19,6 @@ public class GameManager : MonoBehaviour
 
     public int mobsSentThisRound = 0;
 
-    public int[] startGold = { 300, 120, 1200, 1800 };
 
     public GameObject mushroomMob;
     public GameObject flyingEyeMob;
@@ -89,27 +88,19 @@ public class GameManager : MonoBehaviour
                 SpawnEnemies();
                 return;
             }
-            // Temporary until GUI is set up
-            //float startTrigger = Input.GetAxis("Jump");
-            //if(Mathf.Abs(startTrigger) > 0.002f)
-            //{
-            //    Debug.Log("startTrigger: " + startTrigger);
-            //    isStartOfRound = false;
-            //    isRoundGoing = true;
-            //}
-            
-            //PlayerController.startGold = startGold[roundNum];
         }
         else if (isIntermission)
         {
             if (Time.time >= timeVariable)
             {
-                isIntermission = false;
-                isRoundGoing = true;
+                if(roundNum <= NumberOfRounds)
+                {
+                    isIntermission = false;
+                    isRoundGoing = true;
 
-                //start round
-                SpawnEnemies();
-
+                    //start round
+                    SpawnEnemies();
+                }
             }
         }
         else if (isRoundGoing)

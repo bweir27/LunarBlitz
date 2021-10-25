@@ -73,7 +73,7 @@ SpriteRenderer:
   m_SortingLayer: 1
   m_SortingOrder: 0
   m_Sprite: {fileID: -2413806693520163455, guid: a86470a33a6bf42c4b3595704624658b, type: 3}
-  m_Color: {r: 0.5849056, g: 0.5849056, b: 0.5849056, a: 0.45490196}
+  m_Color: {r: 0.5849056, g: 0.5849056, b: 0.5849056, a: 0}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -133,9 +133,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   range: 2.25
   damage: 25
-  timeBetweenShots: 1.5
-  cost: 150
+  timeBetweenShots: 1.25
+  cost: 175
   towerType: {fileID: 0}
+  camera: {fileID: 0}
+  rangeDisplay: {fileID: 1123199331}
+  rangeDisplayColor: {r: 0.58431375, g: 0.58431375, b: 0.58431375, a: 0.45490196}
+  isFocused: 0
   currentTarget: {fileID: 0}
   pivot: {fileID: 4508188018139408180}
   barrel: {fileID: 4512231993081308321}
