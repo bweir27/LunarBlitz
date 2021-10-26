@@ -31,7 +31,7 @@ public class PlayerController : MonoBehaviour
     {
         
         _currGold += amt;
-        Debug.Log(amt + " Gold added! Has: " + _currGold);
+        //Debug.Log(amt + " Gold added! Has: " + _currGold);
         UpdateGoldUI();
     }
 

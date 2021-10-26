@@ -5,7 +5,7 @@ using UnityEngine;
 // Made in part by following tutorial: https://www.youtube.com/watch?v=iKtxC4mzpaI&t=0s
 public class Enemy : MonoBehaviour
 {
-    [SerializeField] protected float enemyHealth;
+    protected float enemyHealth;
     [SerializeField] protected float startHealth; // TODO: Will be used for healthbar
 
     [SerializeField] protected float movementSpeed;
@@ -23,7 +23,7 @@ public class Enemy : MonoBehaviour
 
     void Awake()
     {
-        startHealth = enemyHealth;
+        enemyHealth = startHealth;
         Enemies.enemies.Add(gameObject);
     }
 
@@ -72,7 +72,7 @@ public class Enemy : MonoBehaviour
     {
         // reward gold 
         playerController.AddMoney(killReward);
-        Debug.Log("Enemy killed, rewarded + " + killReward);
+        //Debug.Log("Enemy killed, rewarded + " + killReward);
         //TODO: animate death
         Enemies.enemies.Remove(gameObject);
         Destroy(transform.gameObject);

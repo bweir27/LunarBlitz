@@ -9,6 +9,7 @@ public class PlacementManager : MonoBehaviour
     public Camera cam;
     [SerializeField] private GameObject defaultTower;
     private GameObject towerToBePlaced;
+    private int numTowersPlaced;
 
     private GameObject dummyPlacement;
     public GameObject currMapTile;
@@ -20,7 +21,7 @@ public class PlacementManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-
+        numTowersPlaced = 0;
     }
 
     public Vector2 GetMousePosition()
@@ -113,8 +114,12 @@ public class PlacementManager : MonoBehaviour
                 {
                     GameObject newTowerObj = Instantiate(towerToBePlaced);
                     newTowerObj.layer = LayerMask.NameToLayer("Tower");
+                    newTowerObj.name = towerToBePlaced.name + "" + numTowersPlaced+ "";
+                    numTowersPlaced++;
                     newTowerObj.transform.position = hoverTile.transform.position;
 
+                    BoxCollider2D tileCollider = hoverTile.GetComponent<BoxCollider2D>();
+                    Destroy(tileCollider);
 
                     EndBuilding();
                     shopManager.BuyTower(towerToBePlaced);
@@ -123,7 +128,6 @@ public class PlacementManager : MonoBehaviour
                 {
                     Debug.Log("Not enough money!");
                 }
-                
             }
         }
     }

@@ -38,20 +38,19 @@ public class Tower : MonoBehaviour
         }
 
         // make Tower range display invisible onInit
-        rangeDisplay = GameObject.FindGameObjectWithTag("TowerRangeDisplay");
-        rangeRenderer = rangeDisplay.GetComponent<SpriteRenderer>();
-        rangeDisplay.transform.localScale = new Vector2(range, range);
+        this.rangeDisplay = GameObject.FindGameObjectWithTag("TowerRangeDisplay");
+        this.rangeRenderer = rangeDisplay.GetComponent<SpriteRenderer>();
+        this.rangeDisplay.transform.localScale = new Vector2(range, range);
         Color c = rangeRenderer.color;
+        rangeDisplayColor = c;
+        rangeDisplayColor.a = 0.45f;
         c.a = 0;
         rangeRenderer.color = c;
-        
     }
 
     // Update is called once per frame
     protected virtual void Update()
     {
-        //Debug.Log("Tower Update");
-        //updateNearestEnemy();
         updateLeadEnemy();
         if (Time.time >= nextTimeToShoot)
         {
@@ -62,42 +61,42 @@ public class Tower : MonoBehaviour
             }
         }
 
-        // Listen for mouseHover to focus
-        // get the mouse coordinates (which are in screen coords)
-        // and convert them to world coordinates
-        mousePosInWorldCoords = camera.ScreenToWorldPoint(Input.mousePosition);
+        //rangeDisplay = this.transform.GetChild(1).gameObject;
+        //rangeRenderer = rangeDisplay.GetComponent<SpriteRenderer>();
 
-        // get a ray from the mouse coordinates
-        Ray ray = camera.ScreenPointToRay(Input.mousePosition);
+        //// Listen for mouseHover to focus
+        //// get the mouse coordinates (which are in screen coords)
+        //// and convert them to world coordinates
+        //mousePosInWorldCoords = camera.ScreenToWorldPoint(Input.mousePosition);
 
-        //do a raycast into the scene
-        RaycastHit2D hit = Physics2D.Raycast(ray.origin, ray.direction);
+        //// get a ray from the mouse coordinates
+        //Ray ray = camera.ScreenPointToRay(Input.mousePosition);
 
-        if (hit != null && hit.collider != null)
-        {
-            //FIXME: hover over tower to show range
-            //Debug.Log("Hit!" + hit.collider.gameObject.name);
-            //if (hit.collider.gameObject.name == gameObject.name)
-            //{
-            //    rangeRenderer.color = rangeDisplayColor;
-            //}
-            //else if(if (hit.collider.gameObject.name == gameObject.name))
-            //else
-            //{
+        ////do a raycast into the scene
+        //RaycastHit2D hit = Physics2D.Raycast(ray.origin, ray.direction);
 
-            //SpriteRenderer temp = hit.collider.gameObject.GetComponent<SpriteRenderer>();
-            ////Color b = Color.blue;
-            //temp.color = b;
-            //Color invis = rangeDisplayColor;
-            //invis.a = 0;
-            //rangeRenderer.color = invis;
-            //}
-        }
-        else
-        {
-            //GetComponent<SpriteRenderer>().color = Color.white;
-        }
-        //rangeRenderer.color = Color.clear;
+        //if (hit && hit.collider != null)
+        //{
+        //    //FIXME: hover over tower to show range
+        //    Debug.Log("Hit! " + hit.collider.gameObject.name);
+        //    if (hit.collider.gameObject.name == gameObject.name)
+        //    {
+        //        Debug.Log("Hit Tower!");
+        //        rangeRenderer.color = rangeDisplayColor;
+        //        Debug.Log("Display Color: (" + rangeRenderer.color.r + ", " + rangeRenderer.color.g + ", " + rangeRenderer.color.b + ", " + rangeRenderer.color.a + ")");
+        //    }
+        //    else
+        //    {
+        //        Color invis = rangeDisplayColor;
+        //        invis.a = 0;
+        //        rangeRenderer.color = invis;
+        //    }
+        //}
+        //else
+        //{
+        //    //GetComponent<SpriteRenderer>().color = Color.white;
+        //}
+        ////rangeRenderer.color = Color.clear;
     }
 
 

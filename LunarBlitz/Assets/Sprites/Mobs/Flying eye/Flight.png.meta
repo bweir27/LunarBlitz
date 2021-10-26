@@ -27,7 +27,7 @@ TextureImporter:
       213: 7784096630628774620
     second: Flight_7
   externalObjects: {}
-  serializedVersion: 11
+  serializedVersion: 10
   mipmaps:
     mipMapMode: 0
     enableMipMap: 1
@@ -47,7 +47,6 @@ TextureImporter:
   isReadable: 0
   streamingMipmaps: 0
   streamingMipmapsPriority: 0
-  vTOnly: 0
   grayScaleToAlpha: 0
   generateCubemap: 6
   cubemapConvolution: 0
@@ -57,8 +56,8 @@ TextureImporter:
   textureSettings:
     serializedVersion: 2
     filterMode: 0
-    aniso: 1
-    mipBias: 0
+    aniso: -1
+    mipBias: -100
     wrapU: 1
     wrapV: 1
     wrapW: 1
@@ -79,13 +78,9 @@ TextureImporter:
   textureType: 8
   textureShape: 1
   singleChannelComponent: 0
-  flipbookRows: 1
-  flipbookColumns: 1
   maxTextureSizeSet: 0
   compressionQualitySet: 0
   textureFormatSet: 0
-  ignorePngGamma: 0
-  applyGammaDecoding: 1
   platformSettings:
   - serializedVersion: 3
     buildTarget: DefaultTexturePlatform
@@ -154,12 +149,12 @@ TextureImporter:
       name: Flight_0
       rect:
         serializedVersion: 2
-        x: 53
-        y: 53
-        width: 50
-        height: 39
+        x: 0
+        y: 0
+        width: 150
+        height: 150
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -175,12 +170,12 @@ TextureImporter:
       name: Flight_1
       rect:
         serializedVersion: 2
-        x: 204
-        y: 53
-        width: 50
-        height: 39
+        x: 150
+        y: 0
+        width: 150
+        height: 150
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -196,12 +191,12 @@ TextureImporter:
       name: Flight_2
       rect:
         serializedVersion: 2
-        x: 353
-        y: 54
-        width: 50
-        height: 39
+        x: 300
+        y: 0
+        width: 150
+        height: 150
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -217,12 +212,12 @@ TextureImporter:
       name: Flight_3
       rect:
         serializedVersion: 2
-        x: 505
-        y: 55
-        width: 50
-        height: 34
+        x: 450
+        y: 0
+        width: 150
+        height: 150
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -238,12 +233,12 @@ TextureImporter:
       name: Flight_4
       rect:
         serializedVersion: 2
-        x: 654
-        y: 54
-        width: 50
-        height: 34
+        x: 600
+        y: 0
+        width: 150
+        height: 150
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -259,12 +254,12 @@ TextureImporter:
       name: Flight_5
       rect:
         serializedVersion: 2
-        x: 803
-        y: 53
-        width: 50
-        height: 39
+        x: 750
+        y: 0
+        width: 150
+        height: 150
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -280,12 +275,12 @@ TextureImporter:
       name: Flight_6
       rect:
         serializedVersion: 2
-        x: 955
-        y: 53
-        width: 50
-        height: 39
+        x: 900
+        y: 0
+        width: 150
+        height: 150
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -301,12 +296,12 @@ TextureImporter:
       name: Flight_7
       rect:
         serializedVersion: 2
-        x: 1104
-        y: 51
-        width: 50
-        height: 39
+        x: 1050
+        y: 0
+        width: 150
+        height: 150
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
