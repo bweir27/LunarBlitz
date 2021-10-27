@@ -5,7 +5,7 @@ using UnityEngine;
 public class PlayerController : MonoBehaviour
 {
     private UIManager uiManager;
-    private int _currGold;
+    public int _currGold;
     public int startGold;
 
     public int numLives;

@@ -5,8 +5,9 @@ using UnityEngine;
 // Made in part by following tutorial: https://www.youtube.com/watch?v=7sxF8JVR74c
 public class Tower : MonoBehaviour
 {
+    public Sprite towerPreviewSprite;
     [SerializeField] private float range;
-    [SerializeField] private float damage;
+    [SerializeField] public float damage;
     [SerializeField] private float timeBetweenShots; // Time in seconds between shots
     public int cost;
 
@@ -125,10 +126,10 @@ public class Tower : MonoBehaviour
                     }
                 }
 
-                if(enemy != currentLeadEnemyInRange)
-                {
-                    enemy.GetComponent<SpriteRenderer>().color = Color.white;
-                }
+                //if(enemy != currentLeadEnemyInRange)
+                //{
+                //    enemy.GetComponent<SpriteRenderer>().color = Color.white;
+                //}
             }
         }
 

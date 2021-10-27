@@ -30,6 +30,7 @@ public class BarrelRotation : MonoBehaviour
                 Vector3 newRotation = new Vector3(0, 0, angle);
 
                 pivot.localRotation = Quaternion.Euler(newRotation);
+                //Debug.Log("Tower rotation: " + pivot.localRotation);
             }
         }
     }

@@ -68,6 +68,11 @@ public class Enemy : MonoBehaviour
 
     }
 
+    //protected virtual void OnCollisionEnter2D(Collider2D collider)
+    //{
+    //    //if(collider.)
+    //}
+
     protected virtual void die()
     {
         // reward gold 

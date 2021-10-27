@@ -4,8 +4,8 @@ using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
-    public int roundNum = 0;
-    public int NumberOfRounds = 6;
+    private int _currRoundNum = 0;
+    public int NumberOfRounds = 7;
     public int[] numMobsPerRound = {
         5,
         10,
@@ -15,10 +15,10 @@ public class GameManager : MonoBehaviour
         40
     };
     //public int[] numMushroomsPerRound = {5, 10, 10, 12, 25, 20};
-    public int[] numMushroomsPerRound = new int[7]; //{ 0, 0, 0, 1, 2, 4, 0 };
+    public int[] numMushroomsPerRound;// = new int[8]; //{ 0, 0, 0, 1, 2, 4, 0 };
     //public int[] numFlyingEyesPerRound = { 0, 0, 5, 8, 10, 20 };
-    public int[] numFlyingEyesPerRound = new int[7]; //{ 0, 0, 0, 0, 0, 0 };
-    public int[] numGoblinsPerRound = new int[7]; //{ 3, 6, 9, 4, 0, 10, 16 };
+    public int[] numFlyingEyesPerRound;// = new int[8]; //{ 0, 0, 0, 0, 0, 0 };
+    public int[] numGoblinsPerRound;// = new int[8]; //{ 3, 6, 9, 4, 0, 10, 16 };
 
     public int mobsSentThisRound = 0;
 
@@ -40,6 +40,7 @@ public class GameManager : MonoBehaviour
     public bool isRoundGoing;
     public bool isIntermission;
     public bool isStartOfRound;
+    public bool isGameOver;
 
     private float minTimeBetweenGoblinSpawns = 0.4f;
     private float minTimeBetweenMushroomSpawns = 0.65f;
@@ -47,65 +48,113 @@ public class GameManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        //numMushroomsPerRound
         isRoundGoing = false;
         isIntermission = false;
         isStartOfRound = true;
+        isGameOver = false;
 
         timeVariable = Time.time + timeBeforeRoundStarts;
-        roundNum = 1;
-        uiManager.updateRoundNum(roundNum, NumberOfRounds);
+        _currRoundNum = 0;
+        uiManager.updateRoundNum(_currRoundNum, NumberOfRounds);
     }
 
     void SpawnEnemies()
     {
-        Debug.Log("Spawning Enemies for Round: " + roundNum + "...");
-        if (numMushroomsPerRound.Length > roundNum)
+        // config time between spawns of mobs of same type
+        float _mushroomWaitTime;
+        float _flyingEyeWaitTime;
+        float _goblinWaitTime;
+        if(_currRoundNum > 0)
         {
-            StartCoroutine("ISpawnMushrooms");
+            _mushroomWaitTime = timeBetweenMobSpawns / _currRoundNum;
+            _flyingEyeWaitTime = timeBetweenMobSpawns / (2.0f * _currRoundNum);
+            _goblinWaitTime = timeBetweenMobSpawns / (1.2f * _currRoundNum);
         }
-        if (numFlyingEyesPerRound.Length > roundNum)
+        else // _currRoundNum == 0
         {
-            StartCoroutine("ISpawnFlyingEyes");
+            _mushroomWaitTime = timeBetweenMobSpawns;
+            _flyingEyeWaitTime = timeBetweenMobSpawns;
+            _goblinWaitTime = timeBetweenMobSpawns;
         }
-        if (numGoblinsPerRound.Length > roundNum)
+
+        Debug.Log("Spawning Enemies for Round: " + _currRoundNum + "...");
+
+        // Spawn Mushrooms
+        if (numMushroomsPerRound.Length > _currRoundNum)
         {
-            StartCoroutine("ISpawnGoblins");
+            Debug.Log("Num Mushrooms: " + numMushroomsPerRound[_currRoundNum]);
+            
+            //StartCoroutine("ISpawnMushrooms");
+            StartCoroutine(ISpawnMobs(mushroomMob, numMushroomsPerRound[_currRoundNum], _mushroomWaitTime, minTimeBetweenMushroomSpawns));
+        }
+
+        //Spawn Flying Eyes
+        if (numFlyingEyesPerRound.Length > _currRoundNum)
+        {
+            Debug.Log("Num FlyingEyes: " + numFlyingEyesPerRound[_currRoundNum]);
+            //StartCoroutine("ISpawnFlyingEyes");
+
+            StartCoroutine(ISpawnMobs(flyingEyeMob, numFlyingEyesPerRound[_currRoundNum], _flyingEyeWaitTime, minTimeBetweenGoblinSpawns));
+        }
+
+        // Spawn Goblins
+        if (numGoblinsPerRound.Length > _currRoundNum)
+        {
+            Debug.Log("Num Goblins: " + numGoblinsPerRound[_currRoundNum]);
+            StartCoroutine(ISpawnMobs(goblinMob, numGoblinsPerRound[_currRoundNum], _goblinWaitTime, minTimeBetweenGoblinSpawns));
         }
     }
 
     IEnumerator ISpawnMushrooms()
     {
-        for (int i = 0; i < numMushroomsPerRound[roundNum]; i++)
+        for (int i = 0; i < numMushroomsPerRound[_currRoundNum]; i++)
         {
             //spawn enemy
             GameObject mob = Instantiate(mushroomMob, MapGenerator.startTile.transform.position, Quaternion.identity);
-            float _mushroomWaitTime = timeBetweenMobSpawns / roundNum;
+            float _mushroomWaitTime = timeBetweenMobSpawns / _currRoundNum;
             float _decidedWaitTime = Mathf.Max(_mushroomWaitTime, minTimeBetweenMushroomSpawns);
-            Debug.Log("mushroomWaitTime: " + _decidedWaitTime);
+            //Debug.Log("mushroomWaitTime: " + _decidedWaitTime);
             yield return new WaitForSeconds(_decidedWaitTime);
         }
     }
 
     IEnumerator ISpawnFlyingEyes()
     {
-        for (int i = 0; i < numFlyingEyesPerRound[roundNum]; i++)
+        for (int i = 0; i < numFlyingEyesPerRound[_currRoundNum]; i++)
         {
             //spawn enemy
             GameObject mob = Instantiate(flyingEyeMob, MapGenerator.startTile.transform.position, Quaternion.identity);
-            float _flyingEyeWaitTime = timeBetweenMobSpawns / (2.0f * roundNum);
+            float _flyingEyeWaitTime = timeBetweenMobSpawns / (2.0f * _currRoundNum);
             yield return new WaitForSeconds(_flyingEyeWaitTime);
         }
     }
 
     IEnumerator ISpawnGoblins()
     {
-        for (int i = 0; i < numGoblinsPerRound[roundNum]; i++)
+        for (int i = 0; i < numGoblinsPerRound[_currRoundNum]; i++)
         {
             //spawn enemy
             GameObject mob = Instantiate(goblinMob, MapGenerator.startTile.transform.position, Quaternion.identity);
-            float _goblinWaitTime = timeBetweenMobSpawns / (1.2f * roundNum);
+            //float _goblinWaitTime = timeBetweenMobSpawns / (1.2f * _currRoundNum);
+            //if (_currRoundNum == 0)
+            //{
+
+            //}
+            float _goblinWaitTime = timeBetweenMobSpawns / (1.2f * _currRoundNum);
             float _decidedWaitTime = Mathf.Max(_goblinWaitTime, minTimeBetweenGoblinSpawns);
-            Debug.Log("goblinWaitTime: " + _decidedWaitTime);
+            //Debug.Log("goblinWaitTime: " + _decidedWaitTime);
+            yield return new WaitForSeconds(_decidedWaitTime);
+        }
+    }
+
+    IEnumerator ISpawnMobs(GameObject mobToSpawn, int numMobsToSpawn, float mobWaitTime, float minTimeBetweenSpawn)
+    {
+        for (int i = 0; i < numMobsToSpawn; i++)
+        {
+            //spawn enemy
+            GameObject mob = Instantiate(mobToSpawn, MapGenerator.startTile.transform.position, Quaternion.identity);
+            float _decidedWaitTime = Mathf.Max(mobWaitTime, minTimeBetweenSpawn);
             yield return new WaitForSeconds(_decidedWaitTime);
         }
     }
@@ -130,8 +179,8 @@ public class GameManager : MonoBehaviour
             // wait during intermission
             if (Time.time >= timeVariable)
             {
-                Debug.Log("RoundNum: " + roundNum);
-                if(roundNum - 1 <= NumberOfRounds)
+                Debug.Log("RoundNum: " + _currRoundNum);
+                if(_currRoundNum - 1 <= NumberOfRounds)
                 {
                     isIntermission = false;
                     isRoundGoing = true;
@@ -154,9 +203,11 @@ public class GameManager : MonoBehaviour
             }
             else // end of round
             {
-                if(roundNum > NumberOfRounds)
+                if(_currRoundNum > NumberOfRounds)
                 {
                     Debug.Log("HERE, end of game");
+                    isGameOver = true;
+                    isRoundGoing = false;
                     
                 } else
                 {
@@ -167,36 +218,17 @@ public class GameManager : MonoBehaviour
                     timeVariable = Time.time + timeBetweenWaves;
 
                     //update round number
-                    roundNum++;
-                    uiManager.updateRoundNum(roundNum - 1, NumberOfRounds);
+                    _currRoundNum++;
+                    uiManager.updateRoundNum(_currRoundNum, NumberOfRounds);
                     return;
                 }
                 return;
             }
 
-            //Vector3 startPos = new Vector3(
-            //    MapGenerator.startTile.transform.position.x,
-            //    MapGenerator.startTile.transform.position.y,
-            //    MapGenerator.startTile.transform.position.z);
-            //if (mobsSentThisRound < numMobsPerRound[roundNum])
-            //{
-            //    GameObject mobToSpawn = basicEnemy;
-
-            //    if(mobToSpawn == null)
-            //    {
-
-            //    }
-
-            //    if (Time.time >= timeUntilNextMobSpawn)
-            //    {
-            //        GameObject mob = Instantiate(mobToSpawn);
-            //        mob.transform.position = startPos;
-            //        mobsSentThisRound += 1;
-            //        Debug.Log("Mob Created!");
-            //        timeUntilNextMobSpawn = Time.time + timeBetweenMobSpawns;
-                   
-            //    }
-            //}
+        }
+        else if (isGameOver)
+        {
+            return;
         }
     }
 }

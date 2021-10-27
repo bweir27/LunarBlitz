@@ -16,6 +16,7 @@ public class Ship1Tower : Tower
     protected override void Update()
     {
         base.Update();
+        
 
         rangeDisplay = this.transform.GetChild(1).gameObject;
         rangeRenderer = rangeDisplay.GetComponent<SpriteRenderer>();
@@ -37,7 +38,6 @@ public class Ship1Tower : Tower
             if (hit.collider.gameObject.name.Equals(gameObject.name))
             {
                 rangeRenderer.color = rangeDisplayColor;
-                //Debug.Log("Display Color: (" + rangeRenderer.color.r + ", " + rangeRenderer.color.g + ", " + rangeRenderer.color.b + ", " + rangeRenderer.color.a + ")");
             }
             else
             {
@@ -46,19 +46,12 @@ public class Ship1Tower : Tower
                 rangeRenderer.color = invis;
             }
         }
-        else
-        {
-            //GetComponent<SpriteRenderer>().color = Color.white;
-        }
-        //rangeRenderer.color = Color.clear;
-
     }
 
     protected override void shoot()
     {
         base.shoot();
-        //Debug.Log(bullet);
-        //Debug.Log("Fire!");
+
         //create Bullet
         GameObject newBullet = Instantiate(
             bullet,

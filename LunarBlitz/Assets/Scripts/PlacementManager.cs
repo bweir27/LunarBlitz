@@ -24,6 +24,15 @@ public class PlacementManager : MonoBehaviour
         numTowersPlaced = 0;
     }
 
+    public void setTowerToBePlaced(GameObject tower)
+    {
+        towerToBePlaced = tower;
+    }
+    public GameObject getTowerToBePlaced()
+    {
+        return towerToBePlaced;
+    }
+
     public Vector2 GetMousePosition()
     {
         return cam.ScreenToWorldPoint(Input.mousePosition);
