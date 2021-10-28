@@ -118,7 +118,7 @@ public class Tower : MonoBehaviour
                 if (_distance <= range)
                 {
                     int tilePos = MapGenerator.pathTiles.IndexOf(enemy.GetComponent<Enemy>().targetTile);
-                    if (tilePos >= _maxTilePos)
+                    if (tilePos > _maxTilePos)
                     {
                         distance = _distance;
                         currentLeadEnemyInRange = enemy;
