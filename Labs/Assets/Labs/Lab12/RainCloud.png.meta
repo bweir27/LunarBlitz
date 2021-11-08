@@ -1,0 +1,300 @@
+fileFormatVersion: 2
+guid: 9138f2af17cdd48868946485892c4fe6
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: 4684987828551240253
+    second: RainCloud_0
+  - first:
+      213: 75620553703273259
+    second: RainCloud_1
+  - first:
+      213: 7842448735713213868
+    second: RainCloud_2
+  - first:
+      213: -3177989155487551505
+    second: RainCloud_3
+  - first:
+      213: -3924440686953627246
+    second: RainCloud_4
+  - first:
+      213: -7996047308537381839
+    second: RainCloud_5
+  - first:
+      213: -2522384931985743941
+    second: RainCloud_6
+  - first:
+      213: -9144483707868296165
+    second: RainCloud_7
+  - first:
+      213: 5296888550302476343
+    second: RainCloud_8
+  - first:
+      213: 1137270275562708050
+    second: RainCloud_9
+  - first:
+      213: -1152212417072809265
+    second: RainCloud_10
+  - first:
+      213: 1689833239315352795
+    second: RainCloud_11
+  - first:
+      213: 8419118682249988169
+    second: RainCloud_12
+  - first:
+      213: -7936855480082001708
+    second: RainCloud_13
+  - first:
+      213: 8592747740192292474
+    second: RainCloud_14
+  - first:
+      213: 1253957703215927390
+    second: RainCloud_15
+  - first:
+      213: 7303674244877388633
+    second: RainCloud_16
+  - first:
+      213: 5621538324991857237
+    second: RainCloud_17
+  - first:
+      213: -6266341799022332202
+    second: RainCloud_18
+  - first:
+      213: 2731983816106726245
+    second: RainCloud_19
+  - first:
+      213: -8442669419922077587
+    second: RainCloud_20
+  - first:
+      213: 1548635667800497026
+    second: RainCloud_21
+  - first:
+      213: -2527440413261240738
+    second: RainCloud_22
+  - first:
+      213: 221239559143518923
+    second: RainCloud_23
+  - first:
+      213: 7963379098275340401
+    second: RainCloud_24
+  externalObjects: {}
+  serializedVersion: 11
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 299, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  platformSettings:
+  - serializedVersion: 3
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: WebGL
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: RainCloud_0
+      rect:
+        serializedVersion: 2
+        x: 139
+        y: 299
+        width: 387
+        height: 251
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d3a43d1ab9b640140800000000000000
+      internalID: 4684987828551240253
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: RainCloud_1
+      rect:
+        serializedVersion: 2
+        x: 193
+        y: 268
+        width: 24
+        height: 38
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b23b3313e78ac0100800000000000000
+      internalID: 75620553703273259
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: RainCloud_2
+      rect:
+        serializedVersion: 2
+        x: 259
+        y: 258
+        width: 25
+        height: 38
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: cadb565f299f5dc60800000000000000
+      internalID: 7842448735713213868
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: RainCloud_3
+      rect:
+        serializedVersion: 2
+        x: 345
+        y: 250
+        width: 24
+        height: 38
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: fefee1763b385e3d0800000000000000
+      internalID: -3177989155487551505
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: RainCloud_4
+      rect:
+        serializedVersion: 2
+        x: 423
+        y: 259
+        width: 24
+        height: 39
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 2910a00ecf59989c0800000000000000
+      internalID: -3924440686953627246
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    physicsShape: []
+    bones: []
+    spriteID: 5e97eb03825dee720800000000000000
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+  spritePackingTag: 
+  pSDRemoveMatte: 0
+  pSDShowRemoveMatteOption: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
