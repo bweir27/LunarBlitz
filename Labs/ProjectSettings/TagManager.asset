@@ -51,3 +51,9 @@ TagManager:
   - name: Ground
     uniqueID: 438816041
     locked: 0
+  - name: Rainfall
+    uniqueID: 1380542579
+    locked: 0
+  - name: mainSprite
+    uniqueID: 3863024971
+    locked: 0
