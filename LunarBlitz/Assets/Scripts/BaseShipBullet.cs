@@ -2,23 +2,24 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class BaseShipBullet : MonoBehaviour
+public class BaseShipBullet : Bullet
 {
     // Start is called before the first frame update
-    void Start()
+    protected override void Start()
     {
-        Destroy(gameObject, 5f);
+        base.Start();
+        bulletSpeed = 0.2f;
     }
 
     // Update is called once per frame
-    void Update()
+    protected override void Update()
     {
-        transform.position += transform.up * 0.25f;
+        //base.Update();
+        transform.position += transform.up * bulletSpeed;
     }
 
-    private void OnCollisionEnter2D(Collision2D collision)
+    protected override void OnCollisionEnter2D(Collision2D collision)
     {
-        //Debug.Log("Collision detected!");
-        Destroy(gameObject);
+        base.OnCollisionEnter2D(collision);
     }
 }

@@ -13,6 +13,13 @@ TagManager:
   - BuildingBtn
   - TowerBuyBtn
   - TowerRangeDisplay
+  - TowerManager
+  - GameEndDisplay
+  - EndLivesDisplay
+  - NextLevelBtn
+  - MainMenuBtn
+  - CrossFade
+  - EndPlayAgainBtn
   layers:
   - Default
   - TransparentFX

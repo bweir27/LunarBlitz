@@ -7,35 +7,59 @@ public class Ship1Tower : Tower
     public Transform pivot;
     public Transform barrel;
     public GameObject bullet;
+    
 
     private void Awake()
     {
         
     }
+
+    protected override void Start()
+    {
+        base.Start();
+        fireSound.volume = 0.025f;
+    }
+    
     // Update is called once per frame
     protected override void Update()
     {
         base.Update();
-        //if (currentTarget != null)
-        //{
-        //    Debug.Log(base.currentTarget);
-        //    Vector2 relative = currentTarget.transform.position - pivot.position;
+        
 
-        //    float angle = Mathf.Atan2(relative.y, relative.x) * Mathf.Rad2Deg;
-        //    Debug.Log("angle: " + angle);
+        rangeDisplay = this.transform.GetChild(1).gameObject;
+        rangeRenderer = rangeDisplay.GetComponent<SpriteRenderer>();
 
-        //    Vector3 newRotation = new Vector3(0, 0, angle + 90);
+        // Listen for mouseHover to focus
+        // get the mouse coordinates (which are in screen coords)
+        // and convert them to world coordinates
+        mousePosInWorldCoords = camera.ScreenToWorldPoint(Input.mousePosition);
 
-        //    pivot.rotation = Quaternion.Euler(newRotation);
-        //}
+        // get a ray from the mouse coordinates
+        Ray ray = camera.ScreenPointToRay(Input.mousePosition);
 
+        //do a raycast into the scene
+        RaycastHit2D hit = Physics2D.Raycast(ray.origin, ray.direction);
+
+        if (hit && hit.collider != null)
+        {
+            // If hovering over tower
+            if (hit.collider.gameObject.name.Equals(gameObject.name))
+            {
+                rangeRenderer.color = rangeDisplayColor;
+            }
+            else
+            {
+                Color invis = rangeDisplayColor;
+                invis.a = 0;
+                rangeRenderer.color = invis;
+            }
+        }
     }
 
     protected override void shoot()
     {
         base.shoot();
-        //Debug.Log(bullet);
-        //Debug.Log("Fire!");
+
         //create Bullet
         GameObject newBullet = Instantiate(
             bullet,

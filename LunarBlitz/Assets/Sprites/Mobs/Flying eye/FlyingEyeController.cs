@@ -17,7 +17,7 @@ public class FlyingEyeController : Enemy
     protected override void moveEnemy()
     {
         base.moveEnemy();
-        animator.SetBool("IsMoving", true);
+        //animator.SetBool("IsMoving", true);
     }
 
     protected override void checkPosition()
@@ -33,9 +33,8 @@ public class FlyingEyeController : Enemy
 
         // reward gold 
         playerController.AddMoney(killReward);
-        //Debug.Log("FlyingEye killed, rewarded " + killReward);
         //TODO: animate death
-        animator.SetBool("IsDead", true);
+        //animator.SetBool("IsDead", true);
         Destroy(transform.gameObject);
     }
 

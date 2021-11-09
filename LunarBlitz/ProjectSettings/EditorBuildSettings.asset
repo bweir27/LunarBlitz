@@ -6,6 +6,12 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/LunarBlitz/LunarBlitz.unity
+    path: Assets/LunarBlitz/WelcomeScreen.unity
+    guid: 1d6e74e4bca854097b509cebdd7784b0
+  - enabled: 1
+    path: Assets/LunarBlitz/Level_01.unity
     guid: 2cda990e2423bbf4892e6590ba056729
+  - enabled: 1
+    path: Assets/LunarBlitz/Level_02.unity
+    guid: 2fe15b8d1765a43e69ace50ddc6a1471
   m_configObjects: {}

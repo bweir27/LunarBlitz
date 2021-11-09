@@ -5,7 +5,7 @@ using UnityEngine;
 public class PlayerController : MonoBehaviour
 {
     private UIManager uiManager;
-    private int _currGold;
+    public int _currGold;
     public int startGold;
 
     public int numLives;
@@ -31,14 +31,12 @@ public class PlayerController : MonoBehaviour
     {
         
         _currGold += amt;
-        Debug.Log(amt + " Gold added! Has: " + _currGold);
         UpdateGoldUI();
     }
 
     public void RemoveMoney(int amt)
     {
         _currGold -= amt;
-        //Debug.Log("Removed " + amt + " Gold, has: " + GetCurrentGold());
         UpdateGoldUI();
     }
 
@@ -55,6 +53,12 @@ public class PlayerController : MonoBehaviour
         _livesRemaining = numLives;
 
         uiManager.updateLivesRemainingText(_livesRemaining);
+
+    }
+
+    public int GetNumLivesRemaining()
+    {
+        return _livesRemaining;
     }
 
     public void UpdateLivesUI()
