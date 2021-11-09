@@ -233,7 +233,7 @@ public class UIManager : MonoBehaviour
             }
             else
             {
-                //Debug.Log("No Next level!");
+                Debug.Log("No Next level!");
             }
         }
         else

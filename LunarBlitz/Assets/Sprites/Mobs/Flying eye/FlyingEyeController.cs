@@ -17,7 +17,7 @@ public class FlyingEyeController : Enemy
     protected override void moveEnemy()
     {
         base.moveEnemy();
-        //animator.SetBool("IsMoving", true);
+        animator.SetBool("IsMoving", true);
     }
 
     protected override void checkPosition()
