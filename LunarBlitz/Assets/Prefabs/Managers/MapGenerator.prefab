@@ -1,0 +1,56 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &2522357733164205889
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2522357733164205891}
+  - component: {fileID: 2522357733164205888}
+  m_Layer: 0
+  m_Name: MapGenerator
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2522357733164205891
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2522357733164205889}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -4.62, y: -4.23, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2522357733164205888
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2522357733164205889}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cd568091f892d4c1bb4f6606f358bdfa, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Map: {fileID: 0}
+  MapTile: {fileID: 8421604774087507339, guid: a1c6305a04a1e4b3b9398205eff383e6, type: 3}
+  MapTileSprite: {fileID: 21300262, guid: aa9f510a84a336543994cb3b86dea09f, type: 3}
+  PathTileSprite: {fileID: 21300896, guid: aa9f510a84a336543994cb3b86dea09f, type: 3}
+  PathColor: {r: 0.5283019, g: 0.4519945, b: 0.34140262, a: 1}
+  StartTileColor: {r: 0.3066733, g: 1, b: 0, a: 1}
+  EndTileColor: {r: 0.9716981, g: 0.45407498, b: 0.33459416, a: 1}
+  mapWidth: 11
+  mapHeight: 10
+  originX: -5
+  originY: -4

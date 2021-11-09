@@ -15,7 +15,7 @@ GameObject:
   - component: {fileID: 8401127333415428838}
   m_Layer: 0
   m_Name: Mushroom
-  m_TagString: Untagged
+  m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -117,12 +117,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5da3be54481604a4a889476fbec8e348, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  enemyHealth: 100
-  startHealth: 100
-  movementSpeed: 0.55
+  startHealth: 75
+  movementSpeed: 0.5
   mobSkin: {fileID: 0}
   animator: {fileID: 3703495712184774299}
-  killReward: 15
+  killReward: 10
   damage: 1
   targetTile: {fileID: 0}
 --- !u!61 &8401127333415428838
@@ -138,16 +137,16 @@ BoxCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0, y: 0}
+  m_Offset: {x: 0, y: -0.07687092}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 0.28, y: 0.43}
+    oldSize: {x: 1.5, y: 1.5}
     newSize: {x: 1.5, y: 1.5}
     adaptiveTilingThreshold: 0.5
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 0.28, y: 0.43}
+  m_Size: {x: 0.28, y: 0.38807034}
   m_EdgeRadius: 0

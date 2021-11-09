@@ -22,7 +22,6 @@ public class BarrelRotation : MonoBehaviour
         {
             if(tower.currentTarget != null)
             {
-                //Debug.Log(tower.currentTarget);
                 Vector2 relative = tower.currentTarget.transform.position - pivot.position;
 
                 float angle = Mathf.Atan2(relative.y, relative.x) * Mathf.Rad2Deg;

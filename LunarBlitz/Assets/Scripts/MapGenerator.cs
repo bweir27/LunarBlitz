@@ -18,22 +18,6 @@ public class MapGenerator : MonoBehaviour
     [SerializeField] private int mapWidth;
     [SerializeField] private int mapHeight;
 
-    //TODO: allow custom map design
-    //[SerializeField]
-    //private int[,] mapDesign = new int[,] {
-    //    { 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0 },
-    //    { 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0 },
-    //    { 0, 0, 1, 1, 1, 1, 1, 1, 1, 0, 0 },
-    //    { 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0 },
-    //    { 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0 },
-    //    { 0, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0 },
-    //    { 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0 },
-    //    { 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0 },
-    //    { 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0 },
-    //    { 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0 },
-    //};
-
-
     [SerializeField] private float originX = -6.5f;
     [SerializeField] private float originY = -4.5f;
 
@@ -53,7 +37,6 @@ public class MapGenerator : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        //generateRandomMap();
         generatePlannedMap();
     }
 
@@ -64,7 +47,6 @@ public class MapGenerator : MonoBehaviour
         {
             edgeTiles.Add(mapTiles[i]);
         }
-
 
         return edgeTiles;
     }
@@ -83,12 +65,6 @@ public class MapGenerator : MonoBehaviour
     // For Planned Map
     private GameObject PlannedStartTile()
     {
-        //List<GameObject> edgeTiles = new List<GameObject>();
-        //for (int i = mapWidth; i < mapWidth * mapHeight; i++)
-        //{
-        //    edgeTiles.Add(mapTiles[i]);
-        //}
-
         return mapTiles.FindLast(
             delegate (GameObject obj)
             {
@@ -285,8 +261,6 @@ public class MapGenerator : MonoBehaviour
         List<GameObject> topEdgeTiles = getTopEdgeTiles();
         List<GameObject> bottomEdgeTiles = getBottomEdgeTiles();
 
-        //Debug.Log(pathTiles.Count);
-        //Debug.Log(PathColor);
 
         foreach (GameObject obj in pathTiles)
         {
@@ -296,108 +270,6 @@ public class MapGenerator : MonoBehaviour
 
         startTile.GetComponent<SpriteRenderer>().color = StartTileColor;
         endTile.GetComponent<SpriteRenderer>().color = EndTileColor;
-        //endTile.AddComponent<BoxCollider2D>();
-        //BoxCollider2D endCollider = endTile.GetComponent<BoxCollider2D>();
-        //endCollider.isTrigger = true;
     }
-
-
-    /* TODO: this can be deleted once generatePlannedMap() is working, 
-     * was mostly made when following tutorial, but do not actually want random map generation
-     */
-    //private void generateRandomMap()
-    //{
-    //    for(int y = 0; y < mapHeight; y++)
-    //    {
-    //        for (int x = 0; x < mapWidth; x++)
-    //        {
-    //            GameObject newTile = Instantiate(MapTile);
-    //            newTile.transform.position = new Vector2(originX + x, originY + y);
-    //            mapTiles.Add(newTile);
-    //        }
-    //    }
-
-    //    generatePath();
-    //}
-
-
-    ///* TODO: this can be deleted once generatePlannedMap() is working, 
-    // * was mostly made when following tutorial, but do not actually want random map generation
-    // */
-    //private void generatePath()
-    //{
-    //    List<GameObject> topEdgeTiles = getTopEdgeTiles();
-    //    List<GameObject> bottomEdgeTiles = getBottomEdgeTiles();
-
-    //    int startTilePos = Random.Range(0, mapWidth);
-    //    int endTilePos = Random.Range(0, mapWidth);
-
-    //    startTile = topEdgeTiles[startTilePos];
-    //    endTile = bottomEdgeTiles[endTilePos];
-
-    //    currentTile = startTile;
-
-    //    moveDown();
-
-    //    int loopCount = 0;
-        
-    //    while (!reachedX)
-    //    {
-    //        loopCount++;
-    //        if(loopCount > 100)
-    //        {
-    //            Debug.Log("ReachedX Loop ran too long! Broke out of it!");
-    //            break;
-    //        }
-
-    //        if(currentTile.transform.position.x > endTile.transform.position.x)
-    //        {
-    //            moveLeft();
-    //        }
-    //        else if (currentTile.transform.position.x < endTile.transform.position.x)
-    //        {
-    //            moveRight();
-    //        }
-    //        else
-    //        {
-    //            reachedX = true;
-    //        }
-    //    }
-
-    //    loopCount = 0;
-
-    //    while (!reachedY)
-    //    {
-    //        loopCount++;
-    //        if (loopCount > 100)
-    //        {
-    //            Debug.Log("ReachedY Loop ran too long! Broke out of it!");
-    //            break;
-    //        }
-
-    //        if (currentTile.transform.position.y > endTile.transform.position.y)
-    //        {
-    //            moveDown();
-    //        }
-        
-    //        else
-    //        {
-    //            reachedY = true;
-    //        }
-    //    }
-    //    pathTiles.Add(endTile);
-
-    //    //Debug.Log(pathTiles.Count);
-    //    //Debug.Log(PathColor);
-
-    //    foreach(GameObject obj in pathTiles)
-    //    {
-    //        obj.GetComponent<SpriteRenderer>().color = PathColor;
-    //        obj.GetComponent<SpriteRenderer>().sprite = PathTileSprite;
-    //    }
-
-    //    startTile.GetComponent<SpriteRenderer>().color = StartTileColor;
-    //    endTile.GetComponent<SpriteRenderer>().color = EndTileColor;
-    //}
 
 }

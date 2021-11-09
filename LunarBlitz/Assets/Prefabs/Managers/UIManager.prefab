@@ -1,0 +1,61 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &8206908207318364014
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 8206908207318364000}
+  - component: {fileID: 8206908207318364001}
+  m_Layer: 0
+  m_Name: UIManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &8206908207318364000
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8206908207318364014}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 510.2868, y: 59.098133, z: 0.22998047}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &8206908207318364001
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8206908207318364014}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ff729fc4fd1df4a549354d1012c5186d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  canvas: {fileID: 0}
+  placementManager: {fileID: 0}
+  towerShopContainer: {fileID: 0}
+  towerShopUIPrefab: {fileID: 8895654120789772863, guid: 6ef7255997aa24800ba983c34c956450, type: 3}
+  towerOptions:
+  - {fileID: 7712032975936315589, guid: f1a757b04f9e04108a2198c30feeadb9, type: 3}
+  - {fileID: 3484120590314907163, guid: fa4af1404188542e5b71bd599602c479, type: 3}
+  spaceBetweenMenuOptions: 20
+  LivesRemainingText: {fileID: 0}
+  GoldRemainingText: {fileID: 0}
+  RoundNumberText: {fileID: 0}
+  BuyTowerText: {fileID: 0}
+  CancelBuyTowerText: {fileID: 0}
+  GameWinDisplay: {fileID: 4535829756527885966, guid: cfef55926678e40bb9af14d64ca4561d, type: 3}
+  GameWinLivesRemainingText: {fileID: 0}
+  GameLoseDisplay: {fileID: 4531854799299437514, guid: 1be5fc4b2252a4e868658351dd79e400, type: 3}

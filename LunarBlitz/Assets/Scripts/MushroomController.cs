@@ -33,7 +33,7 @@ public class MushroomController : Enemy
 
         // reward gold 
         playerController.AddMoney(killReward);
-        Debug.Log("Mushroom killed, rewarded + " + killReward);
+        //Debug.Log("Mushroom killed, rewarded + " + killReward);
         //TODO: animate death
         animator.SetBool("IsDead", true);
         //Animation[] animations = animator.GetComponents<Animation>();
