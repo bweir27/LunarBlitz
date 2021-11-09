@@ -40,14 +40,12 @@ public class Tower : MonoBehaviour
         }
 
         // make Tower range display invisible onInit
-        this.rangeDisplay = GameObject.FindGameObjectWithTag("TowerRangeDisplay");
+        rangeDisplay = GameObject.FindGameObjectWithTag("TowerRangeDisplay");
         Transform towerTransform = gameObject.GetComponent<Transform>();
-        // unassign, scale, reassign parent
-        this.rangeRenderer = rangeDisplay.GetComponent<SpriteRenderer>();
 
-        //rangeDisplay.transform.SetParent(null);
+        rangeRenderer = rangeDisplay.GetComponent<SpriteRenderer>();
+
         this.rangeDisplay.transform.localScale = new Vector2(range * 2 + 1, range * 2 + 1);
-        //rangeDisplay.transform.SetParent(towerTransform);
 
         Color c = rangeRenderer.color;
         rangeDisplayColor = c;
