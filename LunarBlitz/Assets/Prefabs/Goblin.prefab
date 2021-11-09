@@ -118,7 +118,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   startHealth: 25
-  movementSpeed: 0.7
+  movementSpeed: 0.75
   mobSkin: {fileID: 0}
   animator: {fileID: 9197840627025307217}
   killReward: 3

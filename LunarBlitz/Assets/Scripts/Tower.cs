@@ -9,6 +9,7 @@ public class Tower : MonoBehaviour
     [SerializeField] private float range;
     [SerializeField] public float damage;
     [SerializeField] private float timeBetweenShots; // Time in seconds between shots
+    protected AudioSource fireSound;
     public int cost;
 
     
@@ -30,7 +31,7 @@ public class Tower : MonoBehaviour
     public GameObject currentTarget;
 
     // Start is called before the first frame update
-    void Start()
+    protected virtual void Start()
     {
         nextTimeToShoot = Time.time;
         if(camera == null)
@@ -40,13 +41,25 @@ public class Tower : MonoBehaviour
 
         // make Tower range display invisible onInit
         this.rangeDisplay = GameObject.FindGameObjectWithTag("TowerRangeDisplay");
+        Transform towerTransform = gameObject.GetComponent<Transform>();
+        // unassign, scale, reassign parent
         this.rangeRenderer = rangeDisplay.GetComponent<SpriteRenderer>();
-        this.rangeDisplay.transform.localScale = new Vector2(range, range);
+
+        //rangeDisplay.transform.SetParent(null);
+        this.rangeDisplay.transform.localScale = new Vector2(range * 2 + 1, range * 2 + 1);
+        //rangeDisplay.transform.SetParent(towerTransform);
+
         Color c = rangeRenderer.color;
         rangeDisplayColor = c;
         rangeDisplayColor.a = 0.45f;
         c.a = 0;
         rangeRenderer.color = c;
+
+        fireSound = gameObject.GetComponent<AudioSource>();
+        if(fireSound == null)
+        {
+            Debug.LogError("This tower does not have an AudioSource!");
+        }
     }
 
     // Update is called once per frame
@@ -62,42 +75,32 @@ public class Tower : MonoBehaviour
             }
         }
 
-        //rangeDisplay = this.transform.GetChild(1).gameObject;
-        //rangeRenderer = rangeDisplay.GetComponent<SpriteRenderer>();
+        rangeDisplay = this.transform.GetChild(1).gameObject;
+        rangeRenderer = rangeDisplay.GetComponent<SpriteRenderer>();
 
-        //// Listen for mouseHover to focus
-        //// get the mouse coordinates (which are in screen coords)
-        //// and convert them to world coordinates
-        //mousePosInWorldCoords = camera.ScreenToWorldPoint(Input.mousePosition);
+        // Listen for mouseHover to focus
+        // get the mouse coordinates (which are in screen coords)
+        // and convert them to world coordinates
+        mousePosInWorldCoords = camera.ScreenToWorldPoint(Input.mousePosition);
 
-        //// get a ray from the mouse coordinates
-        //Ray ray = camera.ScreenPointToRay(Input.mousePosition);
+        // get a ray from the mouse coordinates
+        Ray ray = camera.ScreenPointToRay(Input.mousePosition);
 
-        ////do a raycast into the scene
-        //RaycastHit2D hit = Physics2D.Raycast(ray.origin, ray.direction);
+        //do a raycast into the scene
+        RaycastHit2D hit = Physics2D.Raycast(ray.origin, ray.direction);
 
-        //if (hit && hit.collider != null)
-        //{
-        //    //FIXME: hover over tower to show range
-        //    Debug.Log("Hit! " + hit.collider.gameObject.name);
-        //    if (hit.collider.gameObject.name == gameObject.name)
-        //    {
-        //        Debug.Log("Hit Tower!");
-        //        rangeRenderer.color = rangeDisplayColor;
-        //        Debug.Log("Display Color: (" + rangeRenderer.color.r + ", " + rangeRenderer.color.g + ", " + rangeRenderer.color.b + ", " + rangeRenderer.color.a + ")");
-        //    }
-        //    else
-        //    {
-        //        Color invis = rangeDisplayColor;
-        //        invis.a = 0;
-        //        rangeRenderer.color = invis;
-        //    }
-        //}
-        //else
-        //{
-        //    //GetComponent<SpriteRenderer>().color = Color.white;
-        //}
-        ////rangeRenderer.color = Color.clear;
+        if (hit && hit.collider != null)
+        {
+            if (hit.collider.gameObject.name == gameObject.name)
+            {
+                showRangeDisplay();
+            }
+            else
+            {
+                hideRangeDisplay();
+            }
+        }
+        
     }
 
 
@@ -125,18 +128,12 @@ public class Tower : MonoBehaviour
                         _maxTilePos = tilePos;
                     }
                 }
-
-                //if(enemy != currentLeadEnemyInRange)
-                //{
-                //    enemy.GetComponent<SpriteRenderer>().color = Color.white;
-                //}
             }
         }
 
         if (currentLeadEnemyInRange != null)
         {
             currentTarget = currentLeadEnemyInRange;
-            //currentTarget.GetComponent<SpriteRenderer>().color = Color.blue;
         }
         else
         {
@@ -146,7 +143,32 @@ public class Tower : MonoBehaviour
 
     protected virtual void shoot()
     {
+        
+        if(fireSound != null)
+        {
+            fireSound.Play();
+        }
+        
         Enemy enemyScript = currentTarget.GetComponent<Enemy>();
         enemyScript.takeDamage(damage);
+    }
+
+    protected virtual IEnumerator waitForRotation()
+    {
+        yield return new WaitForSeconds(0.0005f);
+    }
+
+    protected virtual void showRangeDisplay()
+    {
+        Color c = rangeDisplayColor;
+        c.a = 0.45f;
+        rangeRenderer.color = c;
+    }
+
+    protected virtual void hideRangeDisplay()
+    {
+        Color c = rangeDisplayColor;
+        c.a = 0;
+        rangeRenderer.color = c;
     }
 }

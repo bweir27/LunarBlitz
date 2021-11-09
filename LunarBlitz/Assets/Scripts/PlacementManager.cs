@@ -62,7 +62,7 @@ public class PlacementManager : MonoBehaviour
 
     public void toggleBuilding(GameObject towerToBuild)
     {
-        // if currently building, and Buy btn is clicked again, cancel the build
+        // TODO: if currently building, and Buy btn is clicked again, cancel the build
         if (isBuilding)
         {
             Debug.Log("Canceling Build...");

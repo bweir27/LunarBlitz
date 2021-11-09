@@ -8,6 +8,14 @@ public class BasicTower : Tower
     public Transform barrel;
     public GameObject bullet;
 
+
+    protected override void Start()
+    {
+        base.Start();
+        fireSound.volume = 0.005f;
+    }
+
+
     protected override void Update()
     {
         base.Update();
@@ -28,12 +36,9 @@ public class BasicTower : Tower
 
         if (hit && hit.collider != null)
         {
-            //FIXME: hover over tower to show range
             if (hit.collider.gameObject.name.Equals(gameObject.name))
             {
-                //Debug.Log("Hit Tower!");
                 rangeRenderer.color = rangeDisplayColor;
-                //Debug.Log("Display Color: (" + rangeRenderer.color.r + ", " + rangeRenderer.color.g + ", " + rangeRenderer.color.b + ", " + rangeRenderer.color.a + ")");
             }
             else
             {
@@ -42,11 +47,6 @@ public class BasicTower : Tower
                 rangeRenderer.color = invis;
             }
         }
-        else
-        {
-            //GetComponent<SpriteRenderer>().color = Color.white;
-        }
-        //rangeRenderer.color = Color.clear;
     }
 
     protected override void shoot()

@@ -29,7 +29,6 @@ public class Enemy : MonoBehaviour
 
     public virtual void Start()
     {
-        //Enemies.enemies.Add(gameObject);
         initEnemy();
         playerController = FindObjectOfType<PlayerController>();
     }
@@ -68,16 +67,11 @@ public class Enemy : MonoBehaviour
 
     }
 
-    //protected virtual void OnCollisionEnter2D(Collider2D collider)
-    //{
-    //    //if(collider.)
-    //}
 
     protected virtual void die()
     {
         // reward gold 
         playerController.AddMoney(killReward);
-        //Debug.Log("Enemy killed, rewarded + " + killReward);
         //TODO: animate death
         Enemies.enemies.Remove(gameObject);
         Destroy(transform.gameObject);

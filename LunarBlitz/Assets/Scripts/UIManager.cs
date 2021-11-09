@@ -2,9 +2,11 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class UIManager : MonoBehaviour
 {
+    public Canvas canvas;
     public PlacementManager placementManager;
     public GameObject towerShopContainer;
     public GameObject towerShopUIPrefab;
@@ -22,6 +24,12 @@ public class UIManager : MonoBehaviour
     [SerializeField] Text RoundNumberText;
     [SerializeField] Text BuyTowerText;
     [SerializeField] Text CancelBuyTowerText;
+
+    // End Game Displays
+    [SerializeField] GameObject GameWinDisplay;
+    [SerializeField] Text GameWinLivesRemainingText;
+    [SerializeField] GameObject GameLoseDisplay;
+
 
 
     // Start is called before the first frame update
@@ -43,18 +51,18 @@ public class UIManager : MonoBehaviour
         float prefabWidth = towerPrefabRect.rect.width;
         float xPos = containerRect.rect.xMin + (prefabWidth / 2.0f) - prefabWidth; //containerRect.position.x;
         float yPos = 0;
-        Debug.Log("xMin: " + xPos);
         foreach (Tower t in towerOptions) {
             //create option from prefab
             GameObject towerOptionBtn = Instantiate(towerShopUIPrefab);
-            towerOptionBtn.transform.parent = towerShopContainer.transform;
+            //towerOptionBtn.transform.parent = towerShopContainer.transform;
+            towerOptionBtn.transform.SetParent(towerShopContainer.transform, false);
 
             //position it within the parent
             Vector3 currPos = towerOptionBtn.transform.position;
             xPos += spaceBetweenMenuOptions + prefabWidth;
 
             Vector3 setPos = new Vector3(xPos, yPos, currPos.z);
-            Debug.Log("Positioning " + t.name + " at: " + setPos);
+            //Debug.Log("Positioning " + t.name + " at: " + setPos);
             towerOptionBtn.transform.localPosition = setPos;
 
             //get the children elements
@@ -63,7 +71,7 @@ public class UIManager : MonoBehaviour
             GameObject towerCost = towerOptionBtn.transform.GetChild(2).gameObject;
             GameObject towerBuyBtn = towerOptionBtn.transform.GetChild(3).gameObject;
 
-            //set the alues of the children elements depending on the tower
+            //set the values of the children elements depending on the tower
             Image towerPreviewImg = towerPreview.GetComponent<Image>();
             if(towerPreviewImg == null)
             {
@@ -103,17 +111,17 @@ public class UIManager : MonoBehaviour
     public void toggleBtnText(Button btn)
     {
         Text btnText = btn.GetComponentInChildren<Text>();
-        Debug.Log(btn.name + " says: " + btnText.text);
+        //Debug.Log(btn.name + " says: " + btnText.text);
 
-
-        if (btnText.text.Equals("Buy"))
-        {
-            btnText.text = "Cancel";
-        }
-        else
-        {
-            btnText.text = "Buy";
-        }
+        // TODO: allow cancel purchase
+        //if (btnText.text.Equals("Buy"))
+        //{
+        //    btnText.text = "Cancel";
+        //}
+        //else
+        //{
+        //    btnText.text = "Buy";
+        //}
     }
 
     public void InitNumLivesUI(int lives)
@@ -126,22 +134,273 @@ public class UIManager : MonoBehaviour
     {
         _livesRemaining = lives;
         LivesRemainingText.text = "Lives: " + _livesRemaining.ToString();
-        //Debug.Log("Lives remaining: " + _livesRemaining);
-
-        //TODO: if lives = 0, show "Game Over" Display
     }
 
     public void updateGoldRemainingText(int goldAmt)
     {
         _gold = goldAmt;
         GoldRemainingText.text = _gold.ToString();
-        //Debug.Log("GOLD remaining: " + _gold);
     }
 
     public void updateRoundNum(int currRound, int numRounds)
     {
         _roundNum = currRound;
         RoundNumberText.text = "Round: " + _roundNum.ToString() + "/" + numRounds.ToString();
-        //Debug.Log("Wave updated");
     }
+
+    public void displayGameWin()
+    {
+        // disable clicking on game content by making the GameEndDisplay a raycast target
+        GameObject gameEndDisplay = GameObject.FindGameObjectWithTag("GameEndDisplay");
+        if(gameEndDisplay != null)
+        {
+            Image gameEndImg = gameEndDisplay.GetComponent<Image>();
+            if(gameEndImg != null)
+            {
+                gameEndImg.raycastTarget = true;
+            }
+        }
+
+
+        //RectTransform canvasRect = canvas.GetComponent<RectTransform>();
+        RectTransform gameEndDisplayRect = gameEndDisplay.GetComponent<RectTransform>();
+        RectTransform displayPanelRect = GameWinDisplay.GetComponent<RectTransform>();
+
+        float prefabWidth = displayPanelRect.rect.width;
+        float prefabHeight = displayPanelRect.rect.height;
+        
+        Vector3 gameEndDisplayCenter = gameEndDisplayRect.rect.center;
+        float xPos = gameEndDisplayRect.rect.center.x - (prefabWidth / 2.0f); //containerRect.position.x;
+        float yPos = gameEndDisplayRect.rect.center.y + (prefabHeight / 2.0f);
+
+        GameObject gameWinDisplay = Instantiate(GameWinDisplay);
+        GameObject endLivesReaminingObj = FindGameObjectInChildWithTag(gameWinDisplay, "EndLivesDisplay");
+
+        // update the text for the number of lives left remaining
+        if(endLivesReaminingObj != null)
+        {
+            GameWinLivesRemainingText = endLivesReaminingObj.GetComponent<Text>();
+            GameWinLivesRemainingText.text = "Lives Remaining: " + _livesRemaining.ToString();
+            gameWinDisplay.transform.SetParent(gameEndDisplayRect, false);
+
+            Vector3 currPos = gameWinDisplay.transform.position;
+
+            Vector3 setPos = new Vector3(xPos, yPos, currPos.z);
+            gameWinDisplay.transform.localPosition = gameEndDisplayCenter;
+
+        } else
+        {
+            Debug.LogError("Text not found!");
+        }
+
+        // make the buttons work
+        SceneLoader sceneLoader = GameObject.FindObjectOfType<SceneLoader>();
+        if(sceneLoader == null)
+        {
+            Debug.LogError("No SceneLoader found!");
+        }
+
+        // Next level Button
+        GameObject nextLevelBtnObj = FindGameObjectInChildWithTag(GameWinDisplay, "NextLevelBtn");
+        
+        if(nextLevelBtnObj != null)
+        {
+            Transform nextLvlBtnPos = nextLevelBtnObj.transform;
+            Button nextLevelBtn = nextLevelBtnObj.GetComponent<Button>();
+
+            // if no next level, remove the next Level Btn
+            Scene currScene = SceneManager.GetActiveScene();
+            int nextLevelBuildIndex = currScene.buildIndex + 1;
+            
+            if (nextLevelBtn != null)
+            {
+                if(nextLevelBuildIndex < SceneManager.sceneCountInBuildSettings)
+                {
+                    nextLevelBtn.onClick.AddListener(clickNextLevelBtn);
+                    //nextLevelBtn.onClick.AddListener(sceneLoader.startLoadNextLevelTransition);
+                    // show next level button
+                    CanvasGroup canvasGroup = nextLevelBtnObj.GetComponent<CanvasGroup>();
+                    canvasGroup.alpha = 1f; // make visible
+                    canvasGroup.blocksRaycasts = true; // allow to receive input
+                }
+                else
+                {
+                    // hide next level button
+                    CanvasGroup canvasGroup = nextLevelBtnObj.GetComponent<CanvasGroup>();
+                    canvasGroup.alpha = 0f; // make transparent
+                    canvasGroup.blocksRaycasts = false; // prevent from receiving input
+                }
+            }
+            else
+            {
+                //Debug.Log("No Next level!");
+            }
+        }
+        else
+        {
+            Debug.LogError("NextLevelBtn not found!");
+        }
+
+        // Main Menu Btn
+        GameObject mainMenuBtnObj = FindGameObjectInChildWithTag(GameWinDisplay, "MainMenuBtn");
+        if (mainMenuBtnObj != null)
+        {
+            Button mainMenuBtn = mainMenuBtnObj.GetComponent<Button>();
+            if (mainMenuBtn != null)
+            {
+                mainMenuBtn.onClick.AddListener(clickMainMenuBtn);
+            }
+            else
+            {
+                Debug.LogError("MainMenuBtn not found!");
+            }
+        }
+        else
+        {
+            Debug.LogError("MainMenu not found!");
+        }
+
+        
+    }
+
+    public void displayGameLose()
+    {
+        // disable clicking on game content by making the GameEndDisplay a raycast target
+        GameObject gameEndDisplay = GameObject.FindGameObjectWithTag("GameEndDisplay");
+        if (gameEndDisplay != null)
+        {
+            Image gameEndImg = gameEndDisplay.GetComponent<Image>();
+            if (gameEndImg != null)
+            {
+                gameEndImg.raycastTarget = true;
+            }
+        } else
+        {
+            Debug.LogError("GameEndDisplay not found!");
+        }
+
+        RectTransform gameEndDisplayRect = gameEndDisplay.GetComponent<RectTransform>();
+        RectTransform displayPanelRect = GameLoseDisplay.GetComponent<RectTransform>();
+
+        float prefabWidth = displayPanelRect.rect.width;
+        float prefabHeight = displayPanelRect.rect.height;
+
+        Vector3 gameEndDisplayCenter = gameEndDisplayRect.rect.center;
+        float xPos = gameEndDisplayRect.rect.center.x - (prefabWidth / 2.0f); //containerRect.position.x;
+        float yPos = gameEndDisplayRect.rect.center.y + (prefabHeight / 2.0f);
+
+        GameObject gameLoseDisplay = Instantiate(GameLoseDisplay);
+        gameLoseDisplay.transform.SetParent(gameEndDisplayRect, false);
+        Vector3 currPos = gameLoseDisplay.transform.position;
+
+        
+        Image gameLoseImg = gameLoseDisplay.GetComponent<Image>();
+        if (gameLoseImg != null)
+        {
+            gameLoseImg.raycastTarget = true;
+            Debug.Log(gameLoseImg.color);
+            //gameLoseImg.color.a = 1f;
+        }
+
+        Vector3 setPos = new Vector3(xPos, yPos, currPos.z);
+        gameLoseDisplay.transform.localPosition = gameEndDisplayCenter;
+
+        // make the buttons work
+        SceneLoader sceneLoader = GameObject.FindObjectOfType<SceneLoader>();
+        if (sceneLoader == null)
+        {
+            Debug.LogError("No SceneLoader found!");
+        }
+
+        // Next level Button
+        GameObject replayLevelBtnObj = FindGameObjectInChildWithTag(GameLoseDisplay, "EndPlayAgainBtn");
+
+        if (replayLevelBtnObj != null)
+        {
+            Transform replayLvlBtnPos = replayLevelBtnObj.transform;
+            Button replayLevelBtn = replayLevelBtnObj.GetComponent<Button>();
+            
+            if (replayLevelBtn != null)
+            {
+                replayLevelBtn.onClick.AddListener(clickReplayLevelBtn);
+                // show replay level button
+                CanvasGroup canvasGroup = replayLevelBtnObj.GetComponent<CanvasGroup>();
+                canvasGroup.alpha = 1f; // make visible
+                canvasGroup.blocksRaycasts = true; // allow to receive input
+            }
+            else
+            {
+                Debug.LogError("ReplayLevelBtn not found!");
+            }
+        }
+        else
+        {
+            Debug.LogError("ReplayLevelBtn not found!");
+        }
+
+        // Main Menu Btn
+        GameObject mainMenuBtnObj = FindGameObjectInChildWithTag(GameLoseDisplay, "MainMenuBtn");
+        if (mainMenuBtnObj != null)
+        {
+            Button mainMenuBtn = mainMenuBtnObj.GetComponent<Button>();
+            if (mainMenuBtn != null)
+            {
+                mainMenuBtn.onClick.AddListener(clickMainMenuBtn);
+            }
+            else
+            {
+                Debug.LogError("MainMenuBtn not found!");
+            }
+        }
+        else
+        {
+            Debug.LogError("MainMenu not found!");
+        }
+    }
+
+    public void clickMainMenuBtn()
+    {
+        SceneLoader sceneLoader = GameObject.FindObjectOfType<SceneLoader>();
+        if (sceneLoader == null)
+        {
+            Debug.LogError("No SceneLoader found!");
+        }
+        sceneLoader.startMainMenuTransition();
+    }
+
+    public void clickNextLevelBtn()
+    {
+        SceneLoader sceneLoader = GameObject.FindObjectOfType<SceneLoader>();
+        if (sceneLoader == null)
+        {
+            Debug.LogError("No SceneLoader found!");
+        }
+        sceneLoader.startLoadNextLevelTransition();
+    }
+
+    public void clickReplayLevelBtn()
+    {
+        SceneLoader sceneLoader = GameObject.FindObjectOfType<SceneLoader>();
+        if (sceneLoader == null)
+        {
+            Debug.LogError("No SceneLoader found!");
+        }
+        sceneLoader.startLoadSameLevelTransition();
+    }
+
+    // https://answers.unity.com/questions/893966/how-to-find-child-with-tag.html
+    public GameObject FindGameObjectInChildWithTag(GameObject parent, string tag)
+    {
+        Transform t = parent.transform;
+        for (int i = 0; i < t.childCount; i++)
+        {
+            if (t.GetChild(i).gameObject.tag == tag)
+            {
+                return t.GetChild(i).gameObject;
+            }
+        }
+        return null;
+    }
+
+
 }

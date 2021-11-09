@@ -7,11 +7,19 @@ public class Ship1Tower : Tower
     public Transform pivot;
     public Transform barrel;
     public GameObject bullet;
+    
 
     private void Awake()
     {
         
     }
+
+    protected override void Start()
+    {
+        base.Start();
+        fireSound.volume = 0.025f;
+    }
+    
     // Update is called once per frame
     protected override void Update()
     {
