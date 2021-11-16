@@ -8,4 +8,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Labs/Lab1/Lab1.unity
     guid: 2cda990e2423bbf4892e6590ba056729
+  - enabled: 1
+    path: Assets/Labs/Lab13/Lab13.unity
+    guid: 3cbc9b9320609447fb61fe48958077be
   m_configObjects: {}
