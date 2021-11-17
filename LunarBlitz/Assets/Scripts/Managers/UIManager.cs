@@ -1,5 +1,7 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
@@ -8,9 +10,11 @@ public class UIManager : MonoBehaviour
 {
     public Canvas canvas;
     public PlacementManager placementManager;
+    private ShopManager shopManager;
     public GameObject towerShopContainer;
     public GameObject towerShopUIPrefab;
     public Tower[] towerOptions;
+    private List<GameObject> towerOptionUIList;
     [SerializeField] private float spaceBetweenMenuOptions;
 
     private int _livesRemaining;
@@ -39,22 +43,25 @@ public class UIManager : MonoBehaviour
         {
             spaceBetweenMenuOptions = 0.5f;
         }
-        initTowerMenu();
+        towerOptionUIList = initTowerMenu();
+        shopManager = FindObjectOfType<ShopManager>();
     }
 
-    private void initTowerMenu()
+    private List<GameObject> initTowerMenu()
     {
+        List<GameObject> towerOptionList = new List<GameObject>();
         RectTransform containerRect = towerShopContainer.GetComponent<RectTransform>();
         RectTransform towerPrefabRect = towerShopUIPrefab.GetComponent<RectTransform>();
 
-        
         float prefabWidth = towerPrefabRect.rect.width;
         float xPos = containerRect.rect.xMin + (prefabWidth / 2.0f) - prefabWidth; //containerRect.position.x;
         float yPos = 0;
+
+        towerOptions = towerOptions.OrderBy(t => t.cost).ToArray();
         foreach (Tower t in towerOptions) {
             //create option from prefab
             GameObject towerOptionBtn = Instantiate(towerShopUIPrefab);
-            //towerOptionBtn.transform.parent = towerShopContainer.transform;
+
             towerOptionBtn.transform.SetParent(towerShopContainer.transform, false);
 
             //position it within the parent
@@ -88,7 +95,10 @@ public class UIManager : MonoBehaviour
             buyBtn.onClick.RemoveAllListeners();
             buyBtn.onClick.AddListener(() => toggleBuyTower(t.gameObject));
             buyBtn.onClick.AddListener(() => toggleBtnText(buyBtn));
+
+            towerOptionList.Add(towerOptionBtn);
         }
+        return towerOptionList;
     }
     // Update is called once per frame
     void Update()
@@ -104,6 +114,7 @@ public class UIManager : MonoBehaviour
 
     public void toggleBuyTower(GameObject tower)
     {
+        //Debug.Log("Buy Btn Clicked");
         placementManager.toggleBuilding(tower);
     }
 
@@ -137,14 +148,52 @@ public class UIManager : MonoBehaviour
 
     public void updateGoldRemainingText(int goldAmt)
     {
+        //Debug.Log("updateGoldRemainingText: " + goldAmt);
         _gold = goldAmt;
         GoldRemainingText.text = _gold.ToString();
+        if(towerOptionUIList != null)
+        {
+            updateTowerBuyBtns();
+        }
+        
     }
 
     public void updateRoundNum(int currRound, int numRounds)
     {
         _roundNum = currRound;
         RoundNumberText.text = "Round: " + _roundNum.ToString() + "/" + numRounds.ToString();
+    }
+
+    public void updateTowerBuyBtns()
+    {
+        // disallow purchasing of towers that are out of price-range
+        if(towerOptionUIList != null && towerOptionUIList.Count > 0)
+        {
+            foreach (GameObject t in towerOptionUIList)
+            {
+                if (t != null)
+                {
+                    GameObject towerCost = t.transform.GetChild(2).gameObject;
+                    GameObject towerBuyBtn = t.transform.GetChild(3).gameObject;
+
+                    // remove the $ from the tower cost, then parse to an int
+                    int parsedCost = Convert.ToInt32(towerCost.GetComponent<Text>().text.Substring(1));
+
+                    // disable the buy button depending on whether or not player can afford it
+                    Button buyBtn = towerBuyBtn.GetComponent<Button>();
+                    bool canAffordTower = shopManager.PlayerCanAfford(parsedCost);
+
+                    // since the towers are sorted by cost,
+                    //      we can assume that if we weren't able to afford this tower last time,
+                    //      and we still can't, then we can assume the same holds true for the rest of them
+                    if(!canAffordTower && !buyBtn.interactable)
+                    {
+                        break;
+                    }
+                    buyBtn.interactable = canAffordTower;
+                }
+            }
+        }
     }
 
     private void setupGameEndDisplay()
@@ -318,7 +367,7 @@ public class UIManager : MonoBehaviour
         if (gameLoseImg != null)
         {
             gameLoseImg.raycastTarget = true;
-            Debug.Log("GameLoseImg.Color: " + gameLoseImg.color);
+            //Debug.Log("GameLoseImg.Color: " + gameLoseImg.color);
         }
 
         Vector3 setPos = new Vector3(xPos, yPos, currPos.z);

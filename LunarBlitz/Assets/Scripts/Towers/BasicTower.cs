@@ -16,33 +16,36 @@ public class BasicTower : Tower
 
     protected override void Update()
     {
-        base.Update();
-
-        rangeDisplay = this.transform.GetChild(1).gameObject;
-        rangeRenderer = rangeDisplay.GetComponent<SpriteRenderer>();
-
-        // Listen for mouseHover to focus
-        // get the mouse coordinates (which are in screen coords)
-        // and convert them to world coordinates
-        mousePosInWorldCoords = camera.ScreenToWorldPoint(Input.mousePosition);
-
-        // get a ray from the mouse coordinates
-        Ray ray = camera.ScreenPointToRay(Input.mousePosition);
-
-        //do a raycast into the scene
-        RaycastHit2D hit = Physics2D.Raycast(ray.origin, ray.direction);
-
-        if (hit && hit.collider != null)
+        if (isActive)
         {
-            if (hit.collider.gameObject.name.Equals(gameObject.name))
+            base.Update();
+
+            rangeDisplay = this.transform.GetChild(1).gameObject;
+            rangeRenderer = rangeDisplay.GetComponent<SpriteRenderer>();
+
+            // Listen for mouseHover to focus
+            // get the mouse coordinates (which are in screen coords)
+            // and convert them to world coordinates
+            mousePosInWorldCoords = camera.ScreenToWorldPoint(Input.mousePosition);
+
+            // get a ray from the mouse coordinates
+            Ray ray = camera.ScreenPointToRay(Input.mousePosition);
+
+            //do a raycast into the scene
+            RaycastHit2D hit = Physics2D.Raycast(ray.origin, ray.direction);
+
+            if (hit && hit.collider != null)
             {
-                rangeRenderer.color = rangeDisplayColor;
-            }
-            else
-            {
-                Color invis = rangeDisplayColor;
-                invis.a = 0.0f;
-                rangeRenderer.color = invis;
+                if (hit.collider.gameObject.name.Equals(gameObject.name))
+                {
+                    rangeRenderer.color = rangeDisplayColor;
+                }
+                else
+                {
+                    Color invis = rangeDisplayColor;
+                    invis.a = 0.0f;
+                    rangeRenderer.color = invis;
+                }
             }
         }
     }

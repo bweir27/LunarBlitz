@@ -16,6 +16,7 @@ public class Towers : MonoBehaviour
                 Tower tower = t.GetComponent<Tower>();
                 if (tower != null)
                 {
+                    Debug.Log("Shutting down " + tower.name + "...");
                     tower.shutdownTower();
                 }
             }

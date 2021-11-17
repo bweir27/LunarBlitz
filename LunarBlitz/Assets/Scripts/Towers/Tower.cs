@@ -103,6 +103,7 @@ public class Tower : MonoBehaviour
             {
                 if (hit.collider.gameObject.name == gameObject.name)
                 {
+                    Debug.Log("Hovering over " + gameObject.name + ", isActive = " + isActive);
                     showRangeDisplay();
                 }
                 else
@@ -112,7 +113,6 @@ public class Tower : MonoBehaviour
             }
         }
     }
-
 
     protected virtual void updateLeadEnemy()
     {
@@ -224,5 +224,6 @@ public class Tower : MonoBehaviour
     public virtual void shutdownTower()
     {
         isActive = false;
+        Debug.Log(gameObject.name + " active: " + isActive);
     }
 }

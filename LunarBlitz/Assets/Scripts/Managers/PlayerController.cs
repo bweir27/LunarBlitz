@@ -74,6 +74,11 @@ public class PlayerController : MonoBehaviour
         return _currGold;
     }
 
+    public bool CanAfford(int cost)
+    {
+        return cost <= _currGold;
+    }
+
     public void AddMoney(int amt)
     {
         _currGold += amt;

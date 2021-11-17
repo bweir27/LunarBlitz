@@ -165,6 +165,7 @@ GameObject:
   - component: {fileID: 8895654120789772862}
   - component: {fileID: 8895654120789772860}
   - component: {fileID: 8895654120789772861}
+  - component: {fileID: 6220242866537347501}
   m_Layer: 5
   m_Name: BuildingBtn
   m_TagString: BuildingBtn
@@ -233,6 +234,18 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!225 &6220242866537347501
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8895654120789772863}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
 --- !u!1 &8895654120880136441
 GameObject:
   m_ObjectHideFlags: 0
@@ -403,6 +416,7 @@ GameObject:
   - component: {fileID: 8895654121331282643}
   - component: {fileID: 8895654121331282644}
   - component: {fileID: 8895654121331282645}
+  - component: {fileID: 508415271898588836}
   m_Layer: 5
   m_Name: BuyButton
   m_TagString: TowerBuyBtn
@@ -514,18 +528,6 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: UIManager, Assembly-CSharp
-        m_MethodName: toggleBuyTower
-        m_Mode: 2
-        m_Arguments:
-          m_ObjectArgument: {fileID: 545278990201884310, guid: f1a757b04f9e04108a2198c30feeadb9, type: 3}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.GameObject, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 1
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: UIManager, Assembly-CSharp
         m_MethodName: toggleBtnText
         m_Mode: 2
         m_Arguments:
@@ -536,3 +538,15 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 1
+--- !u!225 &508415271898588836
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8895654121331282647}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0

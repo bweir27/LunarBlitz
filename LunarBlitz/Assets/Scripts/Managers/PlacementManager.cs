@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 public class PlacementManager : MonoBehaviour
 {
@@ -17,11 +18,13 @@ public class PlacementManager : MonoBehaviour
     public LayerMask mask;
     public LayerMask towerMask;
     public bool isBuilding;
+    int UILayer;
 
     // Start is called before the first frame update
     void Start()
     {
         numTowersPlaced = 0;
+        UILayer = LayerMask.NameToLayer("UI");
     }
 
     public void setTowerToBePlaced(GameObject tower)
@@ -44,7 +47,8 @@ public class PlacementManager : MonoBehaviour
 
         RaycastHit2D hit = Physics2D.Raycast(mousePos, new Vector2(0, 0), 0.1f, mask, -100, 100);
 
-        if (hit.collider != null)
+        // ignore tiles that are obfuscated by UI elements
+        if (hit.collider != null && !IsPointerOverUIElement())
         {
             bool isMapTile = MapGenerator.mapTiles.Contains(hit.collider.gameObject);
             bool isPathTile = MapGenerator.pathTiles.Contains(hit.collider.gameObject);
@@ -56,6 +60,10 @@ public class PlacementManager : MonoBehaviour
                     hoverTile = hit.collider.gameObject;
                 }
             }
+        }
+        else if (IsPointerOverUIElement())
+        {
+            hoverTile = null;
         }
 
     }
@@ -171,4 +179,36 @@ public class PlacementManager : MonoBehaviour
             }
         }
     }
+
+
+    // https://forum.unity.com/threads/how-to-detect-if-mouse-is-over-ui.1025533/
+    //Returns 'true' if we touched or hovering on Unity UI element.
+    public bool IsPointerOverUIElement()
+    {
+        return IsPointerOverUIElement(GetEventSystemRaycastResults());
+    }
+
+    //Returns 'true' if we touched or hovering on Unity UI element.
+    private bool IsPointerOverUIElement(List<RaycastResult> eventSystemRaysastResults)
+    {
+        for (int index = 0; index < eventSystemRaysastResults.Count; index++)
+        {
+            RaycastResult curRaysastResult = eventSystemRaysastResults[index];
+            if (curRaysastResult.gameObject.layer == UILayer)
+                return true;
+        }
+        return false;
+    }
+
+
+    //Gets all event system raycast results of current mouse or touch position.
+    static List<RaycastResult> GetEventSystemRaycastResults()
+    {
+        PointerEventData eventData = new PointerEventData(EventSystem.current);
+        eventData.position = Input.mousePosition;
+        List<RaycastResult> raysastResults = new List<RaycastResult>();
+        EventSystem.current.RaycastAll(eventData, raysastResults);
+        return raysastResults;
+    }
+
 }

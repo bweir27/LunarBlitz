@@ -21,31 +21,31 @@ public class SceneLoader : MonoBehaviour
 
     public void startSceneTransition()
     {
-        Debug.Log("Tranistion Started!");
+        //Debug.Log("Tranistion Started!");
         StartCoroutine(LoadNextLevel());
     }
 
     public void startSpecifiedLevelTransition(int levelNum)
     {
-        Debug.Log("startSpecifiedLevelTransition: " + levelNum);
+        //Debug.Log("startSpecifiedLevelTransition: " + levelNum);
         StartCoroutine(LoadSpecificLevel(levelNum));
     }
 
     public void startLoadNextLevelTransition()
     {
-        Debug.Log("startLoadNextLevelTransition");
+        //Debug.Log("startLoadNextLevelTransition");
         StartCoroutine(LoadNextLevel());
     }
 
     public void startLoadSameLevelTransition()
     {
-        Debug.Log("startLoadSameLevelTransition");
+        //Debug.Log("startLoadSameLevelTransition");
         StartCoroutine(LoadSameLevel());
     }
 
     public void startMainMenuTransition()
     {
-        Debug.Log("startMainMenuSceneTransition");
+        //Debug.Log("startMainMenuSceneTransition");
         StartCoroutine(ReturnToMainMenu());
     }
 

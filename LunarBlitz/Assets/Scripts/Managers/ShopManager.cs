@@ -22,7 +22,12 @@ public class ShopManager : MonoBehaviour
     public bool CanBuyTower(GameObject towerPrefab)
     {
         int cost = GetTowerCost(towerPrefab);
-        return playerController.GetCurrentGold() >= cost;
+        return PlayerCanAfford(cost);
+    }
+
+    public bool PlayerCanAfford(int cost)
+    {
+        return playerController.CanAfford(cost);
     }
 
     public void BuyTower(GameObject towerPrefab)
