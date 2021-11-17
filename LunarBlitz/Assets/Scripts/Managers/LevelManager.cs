@@ -58,7 +58,6 @@ public class LevelManager : MonoBehaviour
         playerController = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>();
         if (playerController)
         {
-            Debug.Log("LevelController setting player's gold to: " + startGold);
             playerController.SetStartGold(startGold);
             playerController.SetLives(startLives);
         }
@@ -178,6 +177,7 @@ public class LevelManager : MonoBehaviour
             {
                 Debug.LogError("Player not found!");
             }
+            Towers.shutdownTowers();
             return;
         }
     }

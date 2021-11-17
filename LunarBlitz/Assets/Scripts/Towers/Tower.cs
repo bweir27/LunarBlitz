@@ -26,10 +26,17 @@ public class Tower : MonoBehaviour
     protected SpriteRenderer rangeRenderer;
 
     public bool isFocused = false;
+    protected bool isActive = true;
     private float nextTimeToShoot;
 
     public GameObject currentTarget;
     protected Coroutine targeting;
+
+    private void Awake()
+    {
+        Towers.towers.Add(gameObject);
+        isActive = true;
+    }
 
     // Start is called before the first frame update
     protected virtual void Start()
@@ -41,7 +48,6 @@ public class Tower : MonoBehaviour
         }
 
         // make Tower range display invisible onInit
-        //rangeDisplay = GameObject.FindGameObjectWithTag("TowerRangeDisplay");
         rangeDisplay = Instantiate(rangeDisplayPrefab, gameObject.transform.position, Quaternion.identity);
         Transform towerTransform = gameObject.GetComponent<Transform>();
 
@@ -67,39 +73,42 @@ public class Tower : MonoBehaviour
     // Update is called once per frame
     protected virtual void Update()
     {
-        updateLeadEnemy();
-        if (Time.time >= nextTimeToShoot)
+        if (isActive)
         {
-            if(currentTarget != null)
+            updateLeadEnemy();
+            if (Time.time >= nextTimeToShoot)
             {
-                shoot();
-                nextTimeToShoot = Time.time + timeBetweenShots;
+                if (currentTarget != null)
+                {
+                    shoot();
+                    nextTimeToShoot = Time.time + timeBetweenShots;
+                }
             }
-        }
 
-        rangeDisplay = this.transform.GetChild(1).gameObject;
-        rangeRenderer = rangeDisplay.GetComponent<SpriteRenderer>();
+            rangeDisplay = this.transform.GetChild(1).gameObject;
+            rangeRenderer = rangeDisplay.GetComponent<SpriteRenderer>();
 
-        // Listen for mouseHover to focus
-        // get the mouse coordinates (which are in screen coords)
-        // and convert them to world coordinates
-        mousePosInWorldCoords = camera.ScreenToWorldPoint(Input.mousePosition);
+            // Listen for mouseHover to focus
+            // get the mouse coordinates (which are in screen coords)
+            // and convert them to world coordinates
+            mousePosInWorldCoords = camera.ScreenToWorldPoint(Input.mousePosition);
 
-        // get a ray from the mouse coordinates
-        Ray ray = camera.ScreenPointToRay(Input.mousePosition);
+            // get a ray from the mouse coordinates
+            Ray ray = camera.ScreenPointToRay(Input.mousePosition);
 
-        //do a raycast into the scene
-        RaycastHit2D hit = Physics2D.Raycast(ray.origin, ray.direction);
+            //do a raycast into the scene
+            RaycastHit2D hit = Physics2D.Raycast(ray.origin, ray.direction);
 
-        if (hit && hit.collider != null)
-        {
-            if (hit.collider.gameObject.name == gameObject.name)
+            if (hit && hit.collider != null)
             {
-                showRangeDisplay();
-            }
-            else
-            {
-                hideRangeDisplay();
+                if (hit.collider.gameObject.name == gameObject.name)
+                {
+                    showRangeDisplay();
+                }
+                else
+                {
+                    hideRangeDisplay();
+                }
             }
         }
     }
@@ -142,6 +151,8 @@ public class Tower : MonoBehaviour
         c.a = 0;
         rangeRenderer.color = c;
     }
+
+
 
     // === Helpers ===
 
@@ -200,7 +211,6 @@ public class Tower : MonoBehaviour
         List<GameObject> sortedEnemiesInRange = SortEnemiesInRangeByDistanceCovered(Enemies.enemies);
         if (sortedEnemiesInRange.Count > 0)
         {
-            //MobBehaviorTree leadEnemyTree = sortedEnemiesInRange[0].GetComponent<MobBehaviorTree>();
             //Debug.Log("Enemy in Lead: " + sortedEnemiesInRange[0].name + " - DistanceCovered: " + GetEnemyDistanceCovered(sortedEnemiesInRange[0]));
             return sortedEnemiesInRange[0];
         }
@@ -208,6 +218,11 @@ public class Tower : MonoBehaviour
         {
             return null;
         }
-        //return SortEnemiesInRangeByTilePos(Enemies.enemies)[0];
+    }
+
+    // stop the aiming & firing during end game
+    public virtual void shutdownTower()
+    {
+        isActive = false;
     }
 }

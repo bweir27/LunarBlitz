@@ -62,7 +62,6 @@ public class UIManager : MonoBehaviour
             xPos += spaceBetweenMenuOptions + prefabWidth;
 
             Vector3 setPos = new Vector3(xPos, yPos, currPos.z);
-            //Debug.Log("Positioning " + t.name + " at: " + setPos);
             towerOptionBtn.transform.localPosition = setPos;
 
             //get the children elements
@@ -192,12 +191,8 @@ public class UIManager : MonoBehaviour
             gameWinDisplay.transform.localPosition = gameEndDisplayCenter;
             RectTransform gameWinDisplayRect = gameWinDisplay.GetComponent<RectTransform>();
 
-            Debug.Log("gameWinDisplayRect.offsetMin BEFORE: " + gameWinDisplayRect.offsetMin);
-
             gameWinDisplayRect.offsetMin = new Vector2(0, 0);
             gameWinDisplayRect.offsetMax = new Vector2(0, 0);
-
-            Debug.Log("gameWinDisplayRect.offsetMin AFTER: " + gameWinDisplayRect.offsetMin);
 
             gameWinDisplayRect.anchoredPosition = new Vector2(0, 0);
 
@@ -312,13 +307,18 @@ public class UIManager : MonoBehaviour
         gameLoseDisplay.transform.SetParent(gameEndDisplayRect, false);
         Vector3 currPos = gameLoseDisplay.transform.position;
 
+        RectTransform gameLoseDisplayRect = gameLoseDisplay.GetComponent<RectTransform>();
 
-        
+        gameLoseDisplayRect.offsetMin = new Vector2(0, 0);
+        gameLoseDisplayRect.offsetMax = new Vector2(0, 0);
+
+        gameLoseDisplayRect.anchoredPosition = new Vector2(0, 0);
+
         Image gameLoseImg = gameLoseDisplay.GetComponent<Image>();
         if (gameLoseImg != null)
         {
             gameLoseImg.raycastTarget = true;
-            Debug.Log(gameLoseImg.color);
+            Debug.Log("GameLoseImg.Color: " + gameLoseImg.color);
         }
 
         Vector3 setPos = new Vector3(xPos, yPos, currPos.z);
@@ -411,7 +411,6 @@ public class UIManager : MonoBehaviour
 
     public void clickSaveGameBtn()
     {
-        Debug.Log("Save Game btn clicked");
         GameModel gameModel = FindObjectOfType<GameModel>();
         if(gameModel != null)
         {
