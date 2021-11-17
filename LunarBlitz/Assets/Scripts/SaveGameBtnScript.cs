@@ -16,6 +16,15 @@ public class SaveGameBtnScript : MonoBehaviour
         Debug.Log("Save Game Btn Clicked");
         if(gameModel != null)
         {
+            SceneLoader sceneLoader = FindObjectOfType<SceneLoader>();
+            if(sceneLoader != null)
+            {
+                Player player = FindObjectOfType<Player>();
+                if(player != null)
+                {
+                    player.UpdateHighestLevelCompleted(sceneLoader.getCurrentSceneNum());
+                }
+            }
             gameModel.OnSaveClick();
         }
         else

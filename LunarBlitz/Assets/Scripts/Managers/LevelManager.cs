@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class LevelManager : MonoBehaviour
 {
@@ -39,6 +40,8 @@ public class LevelManager : MonoBehaviour
     private float minTimeBetweenMushroomSpawns = 0.65f;
 
     private PlayerController playerController;
+    private Player player;
+    private SceneLoader sceneLoader;
 
     // Start is called before the first frame update
     void Start()
@@ -63,7 +66,14 @@ public class LevelManager : MonoBehaviour
         {
             Debug.LogError("LevelManager could not find Player!");
         }
-        
+
+        sceneLoader = FindObjectOfType<SceneLoader>();
+        if(sceneLoader == null)
+        {
+            Debug.LogError("LevelManager could not find SceneLoader!");
+        }
+
+        levelNum = sceneLoader.getCurrentSceneNum();
     }
 
     // Update is called once per frame
@@ -154,11 +164,11 @@ public class LevelManager : MonoBehaviour
                 }
                 else
                 {
-                    // Only save on level Win
+                    // Automatically save on level Win
                     Debug.Log("Game over, You Win!");
                     uiManager.displayGameWin();
-                    Player player = FindObjectOfType<Player>();
-                    if(levelNum > player.lastCompletedLevel)
+                    player = FindObjectOfType<Player>();
+                    if(player != null && levelNum > player.lastCompletedLevel)
                     {
                         player.UpdateHighestLevelCompleted(levelNum);
                     }

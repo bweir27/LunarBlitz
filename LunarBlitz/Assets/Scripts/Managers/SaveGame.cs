@@ -9,7 +9,6 @@ using System.Runtime.Serialization;
 [Serializable]
 public class SaveGame : ISerializable
 {
-
 	// the fields we'll serialize
 	public int LastCompletedLevel { get; set; }
 
@@ -21,11 +20,13 @@ public class SaveGame : ISerializable
 	public SaveGame(SerializationInfo info, StreamingContext context)
 	{
 		LastCompletedLevel = info.GetInt32("lastCompletedLevel");
+		Debug.Log("SaveGame Constructor, LastCompletedlevel: " + LastCompletedLevel);
 	}
 
 	public void StoreData(GameModel model)
 	{
 		LastCompletedLevel = model.player.GetComponent<Player>().lastCompletedLevel;
+		Debug.Log("SaveGame LastCompletedlevel: " + LastCompletedLevel);
 	}
 
 	public void LoadData(GameModel model)

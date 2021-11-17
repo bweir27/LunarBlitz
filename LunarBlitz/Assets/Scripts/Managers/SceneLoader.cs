@@ -59,7 +59,7 @@ public class SceneLoader : MonoBehaviour
         }
         else
         {
-            Debug.LogError("No level " + levelNum + "!");
+            Debug.LogError("No level " + levelNum + "! Falling back to Main Menu...");
             // Fallback to Main menu
             SceneManager.LoadScene(0);
         }
@@ -100,5 +100,10 @@ public class SceneLoader : MonoBehaviour
     public int getNumScenes()
     {
         return SceneManager.sceneCountInBuildSettings;
+    }
+
+    public int getCurrentSceneNum()
+    {
+        return SceneManager.GetActiveScene().buildIndex;
     }
 }

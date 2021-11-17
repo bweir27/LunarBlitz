@@ -32,6 +32,9 @@ public class Player : MonoBehaviour
 
     public void UpdateHighestLevelCompleted(int lvlNum)
     {
+        // safety check to both prevent negative numbers
+        //  and to prevent accidental lose of progress
         lastCompletedLevel = Mathf.Max(lastCompletedLevel, lvlNum);
+        Debug.Log("Player.UpdateHighestLevelCompleted, lastCompletedLevel: " + lastCompletedLevel);
     }
 }

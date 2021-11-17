@@ -100,20 +100,21 @@ public class GameModel : MonoBehaviour
 			int numScenes = sceneLoader.getNumScenes();
 			Debug.Log("NumScenes: " + numScenes);
 			Debug.Log("LastCompletedLevel: " + saveGame.LastCompletedLevel);
-			if(saveGame.LastCompletedLevel <= 1)
+			if(saveGame.LastCompletedLevel < 1)
             {
 				// Load Level 1 by default
-				sceneLoader.LoadSpecificLevel(1);
+				Debug.Log("Default - Loading Level 1...");
+				sceneLoader.startSpecifiedLevelTransition(1);
 			}
-			else if (saveGame.LastCompletedLevel < numScenes)
+			else if (saveGame.LastCompletedLevel + 1 < numScenes)
             {
 				// Load next unseen level
-				sceneLoader.LoadSpecificLevel(saveGame.LastCompletedLevel + 1);
+				sceneLoader.startSpecifiedLevelTransition(saveGame.LastCompletedLevel + 1);
 			}
             else
             {
 				// replay most recent level if it was the final one
-				sceneLoader.LoadSpecificLevel(numScenes - 1);
+				sceneLoader.startSpecifiedLevelTransition(numScenes - 1);
 			}
 			
         }
