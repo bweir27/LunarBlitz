@@ -10,6 +10,7 @@ public class Bullet : MonoBehaviour
     [SerializeField] public float damage;
     public GameObject ExplosionPrefab;
     protected ParticleSystem OnHitParticleSystem;
+    public GameObject target;
 
     // Start is called before the first frame update
     protected virtual void Start()
@@ -31,11 +32,12 @@ public class Bullet : MonoBehaviour
     protected virtual void Update()
     {
         transform.position += transform.right * bulletSpeed;
+
     }
 
     protected virtual void OnCollisionEnter2D(Collision2D collision)
     {
-        if (collision.collider.tag.Equals("Enemy"))
+        if (collision.collider.tag.Equals("Enemy") && collision.gameObject == target)
         {
             Explode();
             //Destroy(gameObject);
@@ -54,7 +56,6 @@ public class Bullet : MonoBehaviour
         {
             Debug.Log("No Particle System found!");
         }
-
 
         //gameObject.
         Destroy(gameObject);

@@ -17,16 +17,18 @@ public class SceneLoader : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        //if (Input.GetMouseButtonDown(0))
-        //{
-        //    LoadNextScene();
-        //}
     }
 
     public void startSceneTransition()
     {
         Debug.Log("Tranistion Started!");
         StartCoroutine(LoadNextLevel());
+    }
+
+    public void startSpecifiedLevelTransition(int levelNum)
+    {
+        Debug.Log("startSpecifiedLevelTransition: " + levelNum);
+        StartCoroutine(LoadSpecificLevel(levelNum));
     }
 
     public void startLoadNextLevelTransition()
@@ -47,19 +49,36 @@ public class SceneLoader : MonoBehaviour
         StartCoroutine(ReturnToMainMenu());
     }
 
+    public IEnumerator LoadSpecificLevel(int levelNum)
+    {
+        crossFade.SetTrigger("Start");
+        yield return new WaitForSeconds(1f);
+        if (levelNum < SceneManager.sceneCountInBuildSettings)
+        {
+            SceneManager.LoadScene(levelNum);
+        }
+        else
+        {
+            Debug.LogError("No level " + levelNum + "!");
+            // Fallback to Main menu
+            SceneManager.LoadScene(0);
+        }
+    }
+
     public IEnumerator LoadNextLevel()
     {
         crossFade.SetTrigger("Start");
         yield return new WaitForSeconds(1f);
         Scene currScene = SceneManager.GetActiveScene();
         int nextLevelBuildIndex = currScene.buildIndex + 1;
-        //Debug.Log("SceneLoader: sceneCount - " + SceneManager.sceneCountInBuildSettings);
         if(nextLevelBuildIndex < SceneManager.sceneCountInBuildSettings)
         {
             SceneManager.LoadScene(nextLevelBuildIndex);
         } else
         {
             Debug.LogError("No Next level!");
+            // Fallback to Main menu
+            SceneManager.LoadScene(0);
         }
     }
 

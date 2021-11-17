@@ -10,7 +10,6 @@ public class BTRepeatUntilFailureNode : Decorator
 
     public override Result Execute()
     {
-      
         // capture the result of the child
         Result result = Child.Execute();
 

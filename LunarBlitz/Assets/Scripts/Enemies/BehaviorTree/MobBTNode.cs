@@ -8,6 +8,9 @@ public class MobBTNode
     // Failure -> Mob has been killed
     // Success -> Mob has reached end Tile
     public enum Result { Running, Failure, Success };
+    public GameObject TargetTile { get; set; }
+    protected float movementSpeed;
+    
 
     public MobBehaviorTree Tree { get; set; }
 
@@ -22,5 +25,10 @@ public class MobBTNode
     {
         Debug.Log("MobBTNode - Failure");
         return Result.Failure;
+    }
+
+    public virtual float DistanceToTarget()
+    {
+        return (Tree.gameObject.transform.position - TargetTile.transform.position).magnitude;
     }
 }

@@ -5,24 +5,16 @@ using UnityEngine;
 public class ShopManager : MonoBehaviour
 {
     public PlayerController playerController;
-    public GameObject basicTowerPrefab;
-
-    public int basicTowerCost;
 
     // Start is called before the first frame update
     void Start()
     {
-        
+        playerController = FindObjectOfType<PlayerController>();
     }
 
     public int GetTowerCost(GameObject towerPrefab)
     {
         int cost = towerPrefab.GetComponent<Tower>().cost;
-
-        //if(towerPrefab == basicTowerPrefab)
-        //{
-        //    cost = basicTowerCost;
-        //}
 
         return towerPrefab.GetComponent<Tower>().cost;
     }
@@ -42,6 +34,9 @@ public class ShopManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+        if(playerController == null)
+        {
+            playerController = FindObjectOfType<PlayerController>();
+        }
     }
 }

@@ -8,13 +8,11 @@ public class BasicTower : Tower
     public Transform barrel;
     public GameObject bullet;
 
-
     protected override void Start()
     {
         base.Start();
         fireSound.volume = 0.005f;
     }
-
 
     protected override void Update()
     {
@@ -61,6 +59,7 @@ public class BasicTower : Tower
 
         // pass the damage property onto the bullet itself
         Bullet b = newBullet.GetComponent<Bullet>();
+        b.target = currentTarget;
         b.damage = base.damage;
     }
 }

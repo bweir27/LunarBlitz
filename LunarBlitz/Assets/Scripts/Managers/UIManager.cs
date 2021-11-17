@@ -26,11 +26,11 @@ public class UIManager : MonoBehaviour
     [SerializeField] Text CancelBuyTowerText;
 
     // End Game Displays
+    private GameObject gameEndDisplay;
     [SerializeField] GameObject GameWinDisplay;
     [SerializeField] Text GameWinLivesRemainingText;
     [SerializeField] GameObject GameLoseDisplay;
-
-
+    private RectTransform gameEndDisplayRect;
 
     // Start is called before the first frame update
     void Start()
@@ -148,29 +148,32 @@ public class UIManager : MonoBehaviour
         RoundNumberText.text = "Round: " + _roundNum.ToString() + "/" + numRounds.ToString();
     }
 
-    public void displayGameWin()
+    private void setupGameEndDisplay()
     {
         // disable clicking on game content by making the GameEndDisplay a raycast target
-        GameObject gameEndDisplay = GameObject.FindGameObjectWithTag("GameEndDisplay");
-        if(gameEndDisplay != null)
+        gameEndDisplay = GameObject.FindGameObjectWithTag("GameEndDisplay");
+        if (gameEndDisplay != null)
         {
             Image gameEndImg = gameEndDisplay.GetComponent<Image>();
-            if(gameEndImg != null)
+            if (gameEndImg != null)
             {
                 gameEndImg.raycastTarget = true;
             }
         }
+    }
 
+    public void displayGameWin()
+    {
+        setupGameEndDisplay();
 
-        //RectTransform canvasRect = canvas.GetComponent<RectTransform>();
-        RectTransform gameEndDisplayRect = gameEndDisplay.GetComponent<RectTransform>();
+        gameEndDisplayRect = gameEndDisplay.GetComponent<RectTransform>();
         RectTransform displayPanelRect = GameWinDisplay.GetComponent<RectTransform>();
 
         float prefabWidth = displayPanelRect.rect.width;
         float prefabHeight = displayPanelRect.rect.height;
-        
+
         Vector3 gameEndDisplayCenter = gameEndDisplayRect.rect.center;
-        float xPos = gameEndDisplayRect.rect.center.x - (prefabWidth / 2.0f); //containerRect.position.x;
+        float xPos = gameEndDisplayRect.rect.center.x - (prefabWidth / 2.0f);
         float yPos = gameEndDisplayRect.rect.center.y + (prefabHeight / 2.0f);
 
         GameObject gameWinDisplay = Instantiate(GameWinDisplay);
@@ -181,14 +184,25 @@ public class UIManager : MonoBehaviour
         {
             GameWinLivesRemainingText = endLivesReaminingObj.GetComponent<Text>();
             GameWinLivesRemainingText.text = "Lives Remaining: " + _livesRemaining.ToString();
-            gameWinDisplay.transform.SetParent(gameEndDisplayRect, false);
+            gameWinDisplay.transform.SetParent(gameEndDisplay.transform, false);
 
             Vector3 currPos = gameWinDisplay.transform.position;
 
             Vector3 setPos = new Vector3(xPos, yPos, currPos.z);
             gameWinDisplay.transform.localPosition = gameEndDisplayCenter;
+            RectTransform gameWinDisplayRect = gameWinDisplay.GetComponent<RectTransform>();
 
-        } else
+            Debug.Log("gameWinDisplayRect.offsetMin BEFORE: " + gameWinDisplayRect.offsetMin);
+
+            gameWinDisplayRect.offsetMin = new Vector2(0, 0);
+            gameWinDisplayRect.offsetMax = new Vector2(0, 0);
+
+            Debug.Log("gameWinDisplayRect.offsetMin AFTER: " + gameWinDisplayRect.offsetMin);
+
+            gameWinDisplayRect.anchoredPosition = new Vector2(0, 0);
+
+        }
+        else
         {
             Debug.LogError("Text not found!");
         }
@@ -202,7 +216,6 @@ public class UIManager : MonoBehaviour
 
         // Next level Button
         GameObject nextLevelBtnObj = FindGameObjectInChildWithTag(GameWinDisplay, "NextLevelBtn");
-        
         if(nextLevelBtnObj != null)
         {
             Transform nextLvlBtnPos = nextLevelBtnObj.transform;
@@ -214,10 +227,13 @@ public class UIManager : MonoBehaviour
             
             if (nextLevelBtn != null)
             {
+                nextLevelBtn.onClick.RemoveAllListeners();
+
+                // if there is a next level
                 if(nextLevelBuildIndex < SceneManager.sceneCountInBuildSettings)
                 {
                     nextLevelBtn.onClick.AddListener(clickNextLevelBtn);
-                    //nextLevelBtn.onClick.AddListener(sceneLoader.startLoadNextLevelTransition);
+
                     // show next level button
                     CanvasGroup canvasGroup = nextLevelBtnObj.GetComponent<CanvasGroup>();
                     canvasGroup.alpha = 1f; // make visible
@@ -225,6 +241,8 @@ public class UIManager : MonoBehaviour
                 }
                 else
                 {
+                    Debug.Log("No next level");
+
                     // hide next level button
                     CanvasGroup canvasGroup = nextLevelBtnObj.GetComponent<CanvasGroup>();
                     canvasGroup.alpha = 0f; // make transparent
@@ -260,26 +278,27 @@ public class UIManager : MonoBehaviour
             Debug.LogError("MainMenu not found!");
         }
 
-        
+        // Save btn
+        GameObject saveGameBtnObj = FindGameObjectInChildWithTag(GameWinDisplay, "SaveGameBtn");
+        if(saveGameBtnObj != null)
+        {
+            Button saveGameBtn = saveGameBtnObj.GetComponent<Button>();
+            if (saveGameBtn != null)
+            {
+                saveGameBtn.onClick.AddListener(clickSaveGameBtn);
+            }
+            else
+            {
+                Debug.LogError("MainMenuBtn not found!");
+            }
+        }
     }
 
     public void displayGameLose()
     {
-        // disable clicking on game content by making the GameEndDisplay a raycast target
-        GameObject gameEndDisplay = GameObject.FindGameObjectWithTag("GameEndDisplay");
-        if (gameEndDisplay != null)
-        {
-            Image gameEndImg = gameEndDisplay.GetComponent<Image>();
-            if (gameEndImg != null)
-            {
-                gameEndImg.raycastTarget = true;
-            }
-        } else
-        {
-            Debug.LogError("GameEndDisplay not found!");
-        }
+        setupGameEndDisplay();
 
-        RectTransform gameEndDisplayRect = gameEndDisplay.GetComponent<RectTransform>();
+        gameEndDisplayRect = gameEndDisplay.GetComponent<RectTransform>();
         RectTransform displayPanelRect = GameLoseDisplay.GetComponent<RectTransform>();
 
         float prefabWidth = displayPanelRect.rect.width;
@@ -293,17 +312,19 @@ public class UIManager : MonoBehaviour
         gameLoseDisplay.transform.SetParent(gameEndDisplayRect, false);
         Vector3 currPos = gameLoseDisplay.transform.position;
 
+
         
         Image gameLoseImg = gameLoseDisplay.GetComponent<Image>();
         if (gameLoseImg != null)
         {
             gameLoseImg.raycastTarget = true;
             Debug.Log(gameLoseImg.color);
-            //gameLoseImg.color.a = 1f;
         }
 
         Vector3 setPos = new Vector3(xPos, yPos, currPos.z);
         gameLoseDisplay.transform.localPosition = gameEndDisplayCenter;
+        RectTransform gameWinDisplayRect = gameLoseDisplay.GetComponent<RectTransform>();
+        gameWinDisplayRect.anchoredPosition = new Vector2(0, 0);
 
         // make the buttons work
         SceneLoader sceneLoader = GameObject.FindObjectOfType<SceneLoader>();
@@ -388,6 +409,20 @@ public class UIManager : MonoBehaviour
         sceneLoader.startLoadSameLevelTransition();
     }
 
+    public void clickSaveGameBtn()
+    {
+        Debug.Log("Save Game btn clicked");
+        GameModel gameModel = FindObjectOfType<GameModel>();
+        if(gameModel != null)
+        {
+            gameModel.OnSaveClick();
+        }
+        else
+        {
+            Debug.LogError("GameModel not found!");
+        }
+    }
+
     // https://answers.unity.com/questions/893966/how-to-find-child-with-tag.html
     public GameObject FindGameObjectInChildWithTag(GameObject parent, string tag)
     {
@@ -401,6 +436,4 @@ public class UIManager : MonoBehaviour
         }
         return null;
     }
-
-
 }

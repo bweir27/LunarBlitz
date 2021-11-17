@@ -2,18 +2,17 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class MobBTWalk : MobBTNode
+public class MobBTWalkNode : MobBTNode
 {
     protected Vector3 NextDestination { get; set; }
-    protected GameObject TargetTile { get; set; }
-    protected float speed;
+    protected Enemy thisMob;
 
-    public MobBTWalk(MobBehaviorTree t) : base(t)
+    public MobBTWalkNode(MobBehaviorTree t) : base(t)
     {
         NextDestination = MapGenerator.startTile.transform.position;
         TargetTile = MapGenerator.startTile;
-        //speed = Tree.gameObject.GetComponent<Enemy>().
-        //FindNextDestination();
+        movementSpeed = Tree.gameObject.GetComponent<Enemy>().movementSpeed;
+        thisMob = Tree.gameObject.GetComponent<Enemy>();
     }
 
     public bool FindNextDestination()
@@ -42,26 +41,28 @@ public class MobBTWalk : MobBTNode
 
     public override Result Execute()
     {
+        Vector3 currPos = Tree.gameObject.transform.position;
+
         // have we made it to the destination?
-        if (Tree.gameObject.transform.position == NextDestination)
+        if (currPos == NextDestination && currPos != MapGenerator.endTile.transform.position)
         {
-            Debug.Log("DESTINATION REACHED!");
             // fail if we can't find a next destination
             if (!FindNextDestination())
                 return Result.Failure;
 
-            // Not sure if I like this
+            // NextDestination Found, still traveling along path
+            return Result.Running;
+        }
+        else if(currPos == MapGenerator.endTile.transform.position)
+        {
+            // mob has reached the end, register success
             return Result.Success;
         }
         else
         {
-            // otherwise, move towards our next destination as the given speed
-            Tree.gameObject.transform.position =
-                Vector3.MoveTowards(
-                    Tree.gameObject.transform.position,
-                    NextDestination,
-                    speed * Time.deltaTime);
-
+            // otherwise, move towards our destination at the given speed
+            thisMob.moveEnemyTowards(NextDestination);
+       
             // we're not there yet, so return running
             return Result.Running;
         }

@@ -18,17 +18,11 @@ public class MapGenerator : MonoBehaviour
     [SerializeField] private int mapWidth;
     [SerializeField] private int mapHeight;
 
-    [SerializeField] private float originX = -6.5f;
-    [SerializeField] private float originY = -4.5f;
-
     public static List<GameObject> mapTiles = new List<GameObject>();
     public static List<GameObject> pathTiles = new List<GameObject>();
 
     public static GameObject startTile;
     public static GameObject endTile;
-
-    private bool reachedX = false;
-    private bool reachedY = false;
 
     private GameObject currentTile;
     private int currentIndex;
@@ -122,11 +116,9 @@ public class MapGenerator : MonoBehaviour
         currentTile = mapTiles[nextIndex];
     }
 
-    // FIXME: this is currently not working
     private void generatePlannedMap()
     {
         BoundsInt bounds = Map.cellBounds;
-        Debug.Log(bounds.size);
         mapWidth = bounds.size.x;
         mapHeight = bounds.size.y;
         TileBase[] allTiles = Map.GetTilesBlock(bounds);
@@ -190,16 +182,10 @@ public class MapGenerator : MonoBehaviour
         int loopNum = 0;
         while(curr != null)
         {
-            //Debug.Log("LoopNum: " + loopNum);
             GameObject next = findNextStepInPath(pathList, curr, previous);
             if(next != null)
             {
-                //Debug.Log("Next Tile Found: " + next.transform.position);
                 sortedPath.Add(next);
-            }
-            else
-            {
-                //Debug.Log("\'next\' is NULL!");
             }
             
             //update vars

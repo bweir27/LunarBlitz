@@ -13,15 +13,14 @@ public class Tower : MonoBehaviour
     protected AudioSource fireSound;
     public int cost;
 
-    
-
     //TODO: choose between multiple kinds of towers
     [SerializeField] private GameObject towerType;
 
     // for showing the tower range on :hover
     [SerializeField] protected Camera camera;
     protected Vector2 mousePosInWorldCoords;
-    [SerializeField] protected GameObject rangeDisplay;
+    [SerializeField] protected GameObject rangeDisplayPrefab;
+    protected GameObject rangeDisplay;
     [SerializeField] protected Color rangeDisplayColor;
 
     protected SpriteRenderer rangeRenderer;
@@ -42,18 +41,21 @@ public class Tower : MonoBehaviour
         }
 
         // make Tower range display invisible onInit
-        rangeDisplay = GameObject.FindGameObjectWithTag("TowerRangeDisplay");
+        //rangeDisplay = GameObject.FindGameObjectWithTag("TowerRangeDisplay");
+        rangeDisplay = Instantiate(rangeDisplayPrefab, gameObject.transform.position, Quaternion.identity);
         Transform towerTransform = gameObject.GetComponent<Transform>();
 
         rangeRenderer = rangeDisplay.GetComponent<SpriteRenderer>();
 
-        this.rangeDisplay.transform.localScale = new Vector2(range * 2 + 1, range * 2 + 1);
+        rangeDisplay.transform.localScale = new Vector2(range * 2, range * 2);
 
         Color c = rangeRenderer.color;
         rangeDisplayColor = c;
         rangeDisplayColor.a = 0.45f;
         c.a = 0;
         rangeRenderer.color = c;
+
+        rangeDisplay.transform.SetParent(gameObject.transform);
 
         fireSound = gameObject.GetComponent<AudioSource>();
         if(fireSound == null)
@@ -103,35 +105,8 @@ public class Tower : MonoBehaviour
     }
 
 
-    private void updateLeadEnemy()
+    protected virtual void updateLeadEnemy()
     {
-        //GameObject currentLeadEnemyInRange = null;
-
-        //float distance = -Mathf.Infinity;
-        //int _maxTilePos = -1;
-
-        //foreach (GameObject enemy in Enemies.enemies)
-        //{
-        //    if (enemy != null)
-        //    {
-        //        float _distance = DistanceFromTower(enemy);
-
-        //        // ensure enemy is within range of tower
-        //        if (_distance <= range)
-        //        {
-        //            //int tilePos = MapGenerator.pathTiles.IndexOf(enemy.GetComponent<Enemy>().targetTile);
-        //            int tilePos = GetEnemyTilePos(enemy);
-
-        //            if (tilePos > _maxTilePos)
-        //            {
-        //                distance = _distance;
-        //                currentLeadEnemyInRange = enemy;
-        //                _maxTilePos = tilePos;
-        //            }
-        //        }
-        //    }
-        //}
-
         currentTarget = GetLeadEnemy();
     }
 
@@ -141,9 +116,6 @@ public class Tower : MonoBehaviour
         {
             fireSound.Play();
         }
-        
-        //Enemy enemyScript = currentTarget.GetComponent<Enemy>();
-        //enemyScript.takeDamage(damage);
     }
 
     protected virtual IEnumerator waitForRotation()
@@ -153,6 +125,12 @@ public class Tower : MonoBehaviour
 
     protected virtual void showRangeDisplay()
     {
+        if(rangeDisplay == null)
+        {
+            rangeDisplay = Instantiate(rangeDisplayPrefab, gameObject.transform.position, Quaternion.identity);
+            rangeDisplay.transform.localScale = new Vector2(range * 2, range * 2);
+            rangeDisplay.transform.SetParent(gameObject.transform);
+        }
         Color c = rangeDisplayColor;
         c.a = 0.45f;
         rangeRenderer.color = c;
@@ -176,14 +154,26 @@ public class Tower : MonoBehaviour
     // returns the tile position of 
     private int GetEnemyTilePos(GameObject enemy)
     {
-        return MapGenerator.pathTiles.IndexOf(enemy.GetComponent<Enemy>().targetTile);
+        //return MapGenerator.pathTiles.IndexOf(enemy.GetComponent<MobBehaviorTree>().targetTile);
+        return MapGenerator.pathTiles.IndexOf(
+            enemy.GetComponent<MobBehaviorTree>().Root.TargetTile);
+    }
+
+    // returns the distance traveled by an enemy
+    //  The enemy with the highest distance traveled leads the pack 
+    private float GetEnemyDistanceCovered(GameObject enemy)
+    {
+        //return MapGenerator.pathTiles.IndexOf(enemy.GetComponent<MobBehaviorTree>().targetTile);
+        return enemy.GetComponent<Enemy>().DistanceCovered;
     }
 
     // Filters the provided list of Enemies and returns those that are within
     //     range of this tower
     protected virtual List<GameObject> GetEnemiesWithinRange(List<GameObject> enemyList)
     {
-        return enemyList.Where(c => DistanceFromTower(c) <= range).ToList();
+        List<GameObject> enemiesInRange = enemyList.Where(c => DistanceFromTower(c) <= range).ToList();
+        
+        return enemiesInRange;
     }
 
     protected virtual List<GameObject> SortEnemiesInRangeByTilePos(List<GameObject> enemyList)
@@ -191,15 +181,27 @@ public class Tower : MonoBehaviour
         // of the enemies that are within range of the tower,
         //  sort them by the index of the pathTile they are on
         return GetEnemiesWithinRange(enemyList)
-                .OrderByDescending(o => GetEnemyTilePos(o))
+                .OrderBy(o => GetEnemyTilePos(o))
+                .ToList();
+    }
+
+    protected virtual List<GameObject> SortEnemiesInRangeByDistanceCovered(List<GameObject> enemyList)
+    {
+        // of the enemies that are within range of the tower,
+        //  sort them by the distance they've covered (i.e., order in the pack)
+        return GetEnemiesWithinRange(enemyList)
+                .OrderByDescending(o => GetEnemyDistanceCovered(o))
                 .ToList();
     }
 
     protected virtual GameObject GetLeadEnemy()
     {
-        List<GameObject> sortedEnemiesInRange = SortEnemiesInRangeByTilePos(Enemies.enemies);
-        if(sortedEnemiesInRange.Count > 0)
+        //List<GameObject> sortedEnemiesInRange = SortEnemiesInRangeByTilePos(Enemies.enemies);
+        List<GameObject> sortedEnemiesInRange = SortEnemiesInRangeByDistanceCovered(Enemies.enemies);
+        if (sortedEnemiesInRange.Count > 0)
         {
+            //MobBehaviorTree leadEnemyTree = sortedEnemiesInRange[0].GetComponent<MobBehaviorTree>();
+            //Debug.Log("Enemy in Lead: " + sortedEnemiesInRange[0].name + " - DistanceCovered: " + GetEnemyDistanceCovered(sortedEnemiesInRange[0]));
             return sortedEnemiesInRange[0];
         }
         else
@@ -208,6 +210,4 @@ public class Tower : MonoBehaviour
         }
         //return SortEnemiesInRangeByTilePos(Enemies.enemies)[0];
     }
-
-    
 }

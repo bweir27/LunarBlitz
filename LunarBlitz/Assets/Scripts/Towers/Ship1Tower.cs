@@ -17,7 +17,8 @@ public class Ship1Tower : Tower
     protected override void Start()
     {
         base.Start();
-        fireSound.volume = 0.025f;
+        //if(fireSound)
+        //fireSound.volume = 0.025f;
     }
     
     // Update is called once per frame
@@ -68,6 +69,7 @@ public class Ship1Tower : Tower
 
         // pass the damage property onto the bullet itself
         Bullet b = newBullet.GetComponent<Bullet>();
+        b.target = currentTarget;
         b.damage = base.damage;
     }
 }

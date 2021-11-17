@@ -5,8 +5,9 @@ using UnityEngine;
 public class MobBehaviorTree : MonoBehaviour
 {
     // the root of the tree
-    private MobBTNode mRoot;
+    public MobBTNode mRoot;
 
+    public float distanceTraveled;
     // has the behaviour started
     private bool startedBehaviour;
 
@@ -16,12 +17,9 @@ public class MobBehaviorTree : MonoBehaviour
     // HashTable
     // access to the blackboard
     public Dictionary<string, object> Blackboard { get; set; }
-    //public Dictionary<string, object> PathTileList
 
     // public access to the root
     public MobBTNode Root { get { return mRoot; } }
-
-    public Rect bounds;
 
     // Start is called before the first frame update
     void Start()
@@ -29,12 +27,7 @@ public class MobBehaviorTree : MonoBehaviour
         // create Blackboard
         Blackboard = new Dictionary<string, object>();
 
-        if (bounds == null)
-        {
-            bounds = new Rect(0, 0, 4, 4);
-        }
         // setup keys that every AI needs
-        Blackboard.Add("WorldBounds", bounds);
         List<GameObject> pathTiles = MapGenerator.pathTiles;
         if(pathTiles.Count > 0)
         {
@@ -47,10 +40,13 @@ public class MobBehaviorTree : MonoBehaviour
 
         startedBehaviour = false;
 
-        mRoot = new MobBTRepeatUntilFinishOrDead(this,
+        mRoot = new MobBTRepeaterNode(this,
                     new MobBTSequencer(this,
-                        new MobBTNode[] { new MobBTWalk(this)
+                        new MobBTNode[] {
+                            new MobBTWalkNode(this)
                         }));
+
+        distanceTraveled = 0f;
     }
 
     // Update is called once per frame
@@ -69,11 +65,24 @@ public class MobBehaviorTree : MonoBehaviour
 
         while (result == MobBTNode.Result.Running)
         {
-            //Debug.Log("Root result: " + result);
             yield return null;
             result = Root.Execute();
         }
 
-        Debug.Log("Behaviour has finished with: " + result);
+        if(result == MobBTNode.Result.Failure)
+        {
+            Debug.LogError("Root Result -> FAILURE");
+        }
+        else if(result == MobBTNode.Result.Success)
+        {
+            //Mob has successfully reached the end, take lives
+            PlayerController playerController = FindObjectOfType<PlayerController>();
+            Enemy enemy = gameObject.GetComponent<Enemy>();
+            playerController.loseLives(enemy.damage);
+
+            // destroy the mob
+            Enemies.enemies.Remove(gameObject);
+            Destroy(transform.gameObject);
+        }
     }
 }
