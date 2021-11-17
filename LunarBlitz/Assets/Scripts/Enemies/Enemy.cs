@@ -5,7 +5,7 @@ using UnityEngine;
 // Made in part by following tutorial: https://www.youtube.com/watch?v=iKtxC4mzpaI&t=0s
 public class Enemy : MonoBehaviour
 {
-    protected float enemyHealth;
+    [SerializeField] protected float enemyHealth;
     [SerializeField] protected float startHealth; // TODO: Will be used for healthbar
 
     [SerializeField] protected float movementSpeed;
@@ -49,6 +49,22 @@ public class Enemy : MonoBehaviour
         }
     }
 
+    // listen for getting hit by a bullet
+    protected virtual void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (collision.gameObject.tag == "Projectile")
+        {
+            Debug.Log("Collision with Projectile detected! " + collision.gameObject.name);
+            Bullet b = collision.gameObject.GetComponent<Bullet>();
+            takeDamage(b.damage);
+
+            // Enemy destroys projectile on contact to prevent
+            //  raceCondition with projectile destroying itself
+            //Destroy(b);
+            //Debug.Log("Bullet Destroyed");
+        }
+    }
+
     public virtual void takeDamage(float amount)
     {
         enemyHealth -= amount;
@@ -64,7 +80,6 @@ public class Enemy : MonoBehaviour
         {
             die();
         }
-
     }
 
 
@@ -79,7 +94,6 @@ public class Enemy : MonoBehaviour
 
     protected virtual void moveEnemy()
     {
-        
         if(targetTile != null && gameObject != null)
         {
             transform.position = Vector3.MoveTowards(

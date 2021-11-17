@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.Linq;
 
 // Made in part by following tutorial: https://www.youtube.com/watch?v=7sxF8JVR74c
 public class Tower : MonoBehaviour
@@ -29,6 +30,7 @@ public class Tower : MonoBehaviour
     private float nextTimeToShoot;
 
     public GameObject currentTarget;
+    protected Coroutine targeting;
 
     // Start is called before the first frame update
     protected virtual void Start()
@@ -98,57 +100,50 @@ public class Tower : MonoBehaviour
                 hideRangeDisplay();
             }
         }
-        
     }
 
 
     private void updateLeadEnemy()
     {
-        //Debug.Log("Updating Lead Enemy");
-        GameObject currentLeadEnemyInRange = null;
+        //GameObject currentLeadEnemyInRange = null;
 
-        float distance = -Mathf.Infinity;
-        int _maxTilePos = -1;
+        //float distance = -Mathf.Infinity;
+        //int _maxTilePos = -1;
 
-        foreach (GameObject enemy in Enemies.enemies)
-        {
-            if (enemy != null)
-            {
-                float _distance = (transform.position - enemy.transform.position).magnitude;
-                // ensure enemy is within range of tower
-                if (_distance <= range)
-                {
-                    int tilePos = MapGenerator.pathTiles.IndexOf(enemy.GetComponent<Enemy>().targetTile);
-                    if (tilePos > _maxTilePos)
-                    {
-                        distance = _distance;
-                        currentLeadEnemyInRange = enemy;
-                        _maxTilePos = tilePos;
-                    }
-                }
-            }
-        }
+        //foreach (GameObject enemy in Enemies.enemies)
+        //{
+        //    if (enemy != null)
+        //    {
+        //        float _distance = DistanceFromTower(enemy);
 
-        if (currentLeadEnemyInRange != null)
-        {
-            currentTarget = currentLeadEnemyInRange;
-        }
-        else
-        {
-            currentTarget = null;
-        }
+        //        // ensure enemy is within range of tower
+        //        if (_distance <= range)
+        //        {
+        //            //int tilePos = MapGenerator.pathTiles.IndexOf(enemy.GetComponent<Enemy>().targetTile);
+        //            int tilePos = GetEnemyTilePos(enemy);
+
+        //            if (tilePos > _maxTilePos)
+        //            {
+        //                distance = _distance;
+        //                currentLeadEnemyInRange = enemy;
+        //                _maxTilePos = tilePos;
+        //            }
+        //        }
+        //    }
+        //}
+
+        currentTarget = GetLeadEnemy();
     }
 
     protected virtual void shoot()
     {
-        
         if(fireSound != null)
         {
             fireSound.Play();
         }
         
-        Enemy enemyScript = currentTarget.GetComponent<Enemy>();
-        enemyScript.takeDamage(damage);
+        //Enemy enemyScript = currentTarget.GetComponent<Enemy>();
+        //enemyScript.takeDamage(damage);
     }
 
     protected virtual IEnumerator waitForRotation()
@@ -169,4 +164,50 @@ public class Tower : MonoBehaviour
         c.a = 0;
         rangeRenderer.color = c;
     }
+
+    // === Helpers ===
+
+    // Calculates the distance between a GameObject (enemy) and this tower
+    private float DistanceFromTower(GameObject enemy)
+    {
+        return (transform.position - enemy.transform.position).magnitude;
+    }
+
+    // returns the tile position of 
+    private int GetEnemyTilePos(GameObject enemy)
+    {
+        return MapGenerator.pathTiles.IndexOf(enemy.GetComponent<Enemy>().targetTile);
+    }
+
+    // Filters the provided list of Enemies and returns those that are within
+    //     range of this tower
+    protected virtual List<GameObject> GetEnemiesWithinRange(List<GameObject> enemyList)
+    {
+        return enemyList.Where(c => DistanceFromTower(c) <= range).ToList();
+    }
+
+    protected virtual List<GameObject> SortEnemiesInRangeByTilePos(List<GameObject> enemyList)
+    {
+        // of the enemies that are within range of the tower,
+        //  sort them by the index of the pathTile they are on
+        return GetEnemiesWithinRange(enemyList)
+                .OrderByDescending(o => GetEnemyTilePos(o))
+                .ToList();
+    }
+
+    protected virtual GameObject GetLeadEnemy()
+    {
+        List<GameObject> sortedEnemiesInRange = SortEnemiesInRangeByTilePos(Enemies.enemies);
+        if(sortedEnemiesInRange.Count > 0)
+        {
+            return sortedEnemiesInRange[0];
+        }
+        else
+        {
+            return null;
+        }
+        //return SortEnemiesInRangeByTilePos(Enemies.enemies)[0];
+    }
+
+    
 }

@@ -58,5 +58,9 @@ public class BasicTower : Tower
             bullet,
             barrel.position,
             pivot.rotation);
+
+        // pass the damage property onto the bullet itself
+        Bullet b = newBullet.GetComponent<Bullet>();
+        b.damage = base.damage;
     }
 }

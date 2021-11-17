@@ -65,5 +65,9 @@ public class Ship1Tower : Tower
             bullet,
             barrel.position,
             pivot.rotation);
+
+        // pass the damage property onto the bullet itself
+        Bullet b = newBullet.GetComponent<Bullet>();
+        b.damage = base.damage;
     }
 }
