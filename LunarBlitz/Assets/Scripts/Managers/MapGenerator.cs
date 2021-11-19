@@ -11,6 +11,12 @@ public class MapGenerator : MonoBehaviour
     public Sprite MapTileSprite;
     public Sprite PathTileSprite;
 
+    public List<Sprite> possiblePathSprites = new List<Sprite>();
+    public List<Sprite> possibleMapSprites = new List<Sprite>();
+
+    public HashSet<Sprite> PossiblePathTiles = new HashSet<Sprite>();
+    public HashSet<Sprite> PossibleMapTiles = new HashSet<Sprite>();
+
     public Color PathColor;
     public Color StartTileColor;
     public Color EndTileColor;
@@ -31,6 +37,8 @@ public class MapGenerator : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        PossiblePathTiles.UnionWith(possiblePathSprites);
+        PossibleMapTiles.UnionWith(possibleMapSprites);
         generatePlannedMap();
     }
 
@@ -60,7 +68,11 @@ public class MapGenerator : MonoBehaviour
         //get offset of tiles to align properly with tilemap
         float xOffset = Map.tileAnchor.x;
         float yOffset = Map.tileAnchor.y;
-        
+
+        int mapMinX = (int)(Map.cellBounds.min.x);
+        int mapMinY = (int)(Map.cellBounds.min.y);
+        Debug.Log($"MapMin: ({mapMinX}, {mapMinY})");
+
         int orX = bounds.x;
         int orY = bounds.y;
 
@@ -70,28 +82,79 @@ public class MapGenerator : MonoBehaviour
             for (int y = 0; y < bounds.size.y; y++)
             {
                 TileBase tile = allTiles[x + y * bounds.size.x];
+
+                //Tile tileTwo = Map.GetTile()
+                //int mapPosX = (int)(x + Map.cellBounds.min.x);
+                //int mapPosY = (int)(y + Map.cellBounds.min.y);
+                //Debug.Log($"MapPos: ({mapPosX}, {mapPosY})");
+                //Sprite tileSprite = Map.GetSprite(
+                //    new Vector3Int(
+                //        mapPosX,
+                //        mapPosY, 0));
+
+                //Debug.Log("Tile at (" + mapPosX + ", " + mapPosY + ", 0) named \'" + tileSprite.name + "\' isPathTile: " + isPathTile(tileSprite));
+
+                //Sprite tileSprite = tile.GetTileData(
+                //    new Vector3Int(
+                //        (int)(x - Map.localBounds.min.x),
+                //        (int)(y - Map.localBounds.min.y), 0), Map, out tileData);
+
                 if (tile != null)
                 {
-                    GameObject newTile = Instantiate(MapTile);
-                    newTile.transform.position = new Vector2(orX + x + xOffset, orY + y + yOffset);
-                    //newTile.transform.position = tile;
-                    if (tile.name.EndsWith(PathTileSprite.name.Substring(PathTileSprite.name.Length - 4)))
+                    int mapPosX = (int)(mapMinX + x);
+                    int mapPosY = (int)(mapMinY + y);
+                    Sprite tileSprite = Map.GetSprite(new Vector3Int(mapPosX, mapPosY, 0));
+                    //Debug.Log($"MapPos: ({mapPosX}, {mapPosY})");
+                    //Sprite tileSprite = Map.GetSprite(
+                    //    new Vector3Int(
+                    //        mapPosX,
+                    //        mapPosY, 0));
+                    if(tileSprite != null)
                     {
-                        newTile.GetComponent<SpriteRenderer>().color = PathColor;
-                        newTile.GetComponent<SpriteRenderer>().sprite = PathTileSprite;
-                        tempPathTiles.Add(newTile);
+                        //Debug.Log("Tile at (" + mapPosX + ", " + mapPosY + ", 0) named \'" + tileSprite.name + "\' isPathTile: " + isPathTile(tileSprite));
+
+                        GameObject newTile = Instantiate(MapTile);
+                        newTile.transform.position = new Vector2(orX + x + xOffset, orY + y + yOffset);
+
+                        //if this tile is a pathTile
+                        //if (tile.name.EndsWith(PathTileSprite.name.Substring(PathTileSprite.name.Length - 4)))
+                        if(isPathTile(tileSprite))
+                        {
+                            if (tileSprite.name.StartsWith("lunerSurface"))
+                            {
+                                newTile.GetComponent<SpriteRenderer>().color = Color.black;
+                            }
+                            else
+                            {
+                                newTile.GetComponent<SpriteRenderer>().color = Color.white;
+                            }
+                            
+                            newTile.GetComponent<SpriteRenderer>().sprite = tileSprite;
+                            tempPathTiles.Add(newTile);
+                        }
+                        else
+                        {
+                            // not a pathTile
+                            if (tileSprite.name.StartsWith("lunerSurface"))
+                            {
+                                newTile.GetComponent<SpriteRenderer>().color = Color.black;
+                            }
+                            else
+                            {
+                                newTile.GetComponent<SpriteRenderer>().color = Color.white;
+                            }
+                            //newTile.GetComponent<SpriteRenderer>().color = Color.black;
+                            newTile.GetComponent<SpriteRenderer>().sprite = tileSprite;
+                        }
+                        mapTiles.Add(newTile);
                     }
-                    else
-                    {
-                        newTile.GetComponent<SpriteRenderer>().color = Color.white;
-                        newTile.GetComponent<SpriteRenderer>().sprite = MapTileSprite;
-                    }
-                    mapTiles.Add(newTile);
+
+
                 }
             }
         }
 
-        //we want the mobs to move from right -> left
+        // we want the mobs to move from right -> left
         tempPathTiles.Reverse();
         tempPathTiles = pathSort(tempPathTiles, tempPathTiles[0]);
 
@@ -110,7 +173,7 @@ public class MapGenerator : MonoBehaviour
         pathTiles = tempPathTiles;
     }
 
-    // sorts the path tiles in the order they should be traversed
+    // sorts the path tiles in the order they should be traversed (handles vertical path sections)
     private List<GameObject> pathSort(List<GameObject> pathList, GameObject startTile)
     {
         List<GameObject> sortedPath = new List<GameObject>();
@@ -181,5 +244,10 @@ public class MapGenerator : MonoBehaviour
         }
         
         return res;
+    }
+
+    private bool isPathTile(Sprite testSprite)
+    {
+        return PossiblePathTiles.Contains(testSprite);
     }
 }

@@ -9,6 +9,7 @@ public class MobBTNode
     // Success -> Mob has reached end Tile
     public enum Result { Running, Failure, Success };
     public GameObject TargetTile { get; set; }
+    public GameObject EndTile { get; set; }
     protected float movementSpeed;
     
 

@@ -30,13 +30,13 @@ public class LevelManager : MonoBehaviour
     public float timeBeforeRoundStarts;
     public float timeBetweenMobSpawns;
 
-    public float timeVariable;
+    private float timeVariable;
 
-    public bool isRoundGoing;
-    public bool isIntermission;
-    public bool isStartOfRound;
-    public bool isGameOver;
-    public bool EndScreenDisplayed = false;
+    [SerializeField] private bool isRoundGoing;
+    [SerializeField] private bool isIntermission;
+    [SerializeField] private bool isStartOfRound;
+    [SerializeField] private bool isGameOver;
+    [SerializeField] private bool EndScreenDisplayed = false;
 
     private float minTimeBetweenGoblinSpawns = 0.6f;
     private float minTimeBetweenMushroomSpawns = 0.9f;
@@ -61,7 +61,10 @@ public class LevelManager : MonoBehaviour
         goblinMob = Enemies.goblinMob;
         banditMob = Enemies.banditMob;
 
-
+        if (uiManager == null)
+        {
+            uiManager = GameObject.FindObjectOfType<UIManager>();
+        }
 
         timeVariable = Time.time + timeBeforeRoundStarts;
         _currRoundNum = 0;
@@ -87,10 +90,7 @@ public class LevelManager : MonoBehaviour
             sceneLoader = GameObject.FindObjectOfType<SceneLoader>();
         }
 
-        if(uiManager == null)
-        {
-            uiManager = GameObject.FindObjectOfType<UIManager>();
-        }
+        
 
         levelNum = sceneLoader.getCurrentSceneNum();
     }
@@ -145,14 +145,13 @@ public class LevelManager : MonoBehaviour
                 }
                 else
                 {
-                    isIntermission = true;
                     isRoundGoing = false;
 
                     // reset time
                     timeVariable = Time.time + timeBetweenWaves;
 
                     //check if gameover
-                    if (_currRoundNum + 1 > NumberOfRounds)
+                    if (_currRoundNum + 1 >= NumberOfRounds)
                     {
                         isGameOver = true;
                         isIntermission = false;
@@ -162,6 +161,7 @@ public class LevelManager : MonoBehaviour
                         //update round number
                         _currRoundNum++;
                         uiManager.updateRoundNum(_currRoundNum + 1, NumberOfRounds);
+                        isIntermission = true;
                         return;
                     }
                 }
@@ -261,7 +261,19 @@ public class LevelManager : MonoBehaviour
             GameObject mob = Instantiate(mobToSpawn, MapGenerator.startTile.transform.position, Quaternion.identity);
             mob.name = mobToSpawn.name + "" + i;
             float _decidedWaitTime = Mathf.Max(mobWaitTime, minTimeBetweenSpawn);
-            yield return new WaitForSeconds(_decidedWaitTime);
+
+            // spawn each enemy in batches of 10
+            bool batchInterval = _decidedWaitTime == minTimeBetweenSpawn && i > 0 && i % 10 == 0 && (numMobsToSpawn - i) > 4.0f;
+            if (batchInterval)
+            {
+                Debug.Log("Waiting between " + mobToSpawn.name + " batches...");
+                yield return new WaitForSeconds(minTimeBetweenSpawn * 3.5f);
+            }
+            else
+            {
+                yield return new WaitForSeconds(_decidedWaitTime);
+            }
+            
         }
     }
 
@@ -272,7 +284,7 @@ public class LevelManager : MonoBehaviour
 
     public bool checkGameWon()
     {
-        if (_currRoundNum + 1 > NumberOfRounds)
+        if (Enemies.enemies.Count <= 0 && _currRoundNum + 1 > NumberOfRounds)
         {
             isGameOver = true;
             return true;

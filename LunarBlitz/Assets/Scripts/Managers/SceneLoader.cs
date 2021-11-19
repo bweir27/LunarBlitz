@@ -71,10 +71,12 @@ public class SceneLoader : MonoBehaviour
         yield return new WaitForSeconds(1f);
         Scene currScene = SceneManager.GetActiveScene();
         int nextLevelBuildIndex = currScene.buildIndex + 1;
+        // account for credits scene
         if(nextLevelBuildIndex < SceneManager.sceneCountInBuildSettings)
         {
             SceneManager.LoadScene(nextLevelBuildIndex);
-        } else
+        }
+        else
         {
             Debug.LogError("No Next level!");
             // Fallback to Main menu
@@ -93,8 +95,14 @@ public class SceneLoader : MonoBehaviour
     {
         crossFade.SetTrigger("Start");
         yield return new WaitForSeconds(1f);
-        int nextLevelBuildIndex = 0;
-        SceneManager.LoadScene(nextLevelBuildIndex);
+        SceneManager.LoadScene("WelcomeScreen");
+    }
+
+    public IEnumerator LoadCredits()
+    {
+        crossFade.SetTrigger("Start");
+        yield return new WaitForSeconds(1f);
+        SceneManager.LoadScene("Credits");
     }
 
     public int getNumScenes()

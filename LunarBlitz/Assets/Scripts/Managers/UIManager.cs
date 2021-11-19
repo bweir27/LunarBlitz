@@ -140,10 +140,10 @@ public class UIManager : MonoBehaviour
         LivesRemainingText.text = "Lives: " + _livesRemaining.ToString();
     }
 
-    public void updateLivesRemainingText(int lives)
+    public void updateLivesRemainingText(int livesRemaining, int startLives)
     {
-        _livesRemaining = lives;
-        LivesRemainingText.text = "Lives: " + _livesRemaining.ToString();
+        _livesRemaining = livesRemaining;
+        LivesRemainingText.text = "Lives: " + _livesRemaining.ToString() + "/" + startLives.ToString();
     }
 
     public void updateGoldRemainingText(int goldAmt)
@@ -271,14 +271,17 @@ public class UIManager : MonoBehaviour
             if (nextLevelBtn != null)
             {
                 nextLevelBtn.onClick.RemoveAllListeners();
+                nextLevelBtn.onClick.AddListener(clickNextLevelBtn);
 
                 // if there is a next level
-                if(nextLevelBuildIndex < SceneManager.sceneCountInBuildSettings)
+                if (nextLevelBuildIndex < SceneManager.sceneCountInBuildSettings - 1)
                 {
-                    nextLevelBtn.onClick.AddListener(clickNextLevelBtn);
+                    //nextLevelBtn.onClick.AddListener(clickNextLevelBtn);
 
                     // show next level button
                     Debug.Log("Showing Next level Btn");
+                    Text nextLvlBtnText = nextLevelBtn.GetComponentInChildren<Text>();
+                    nextLvlBtnText.text = "Next Level";
                     CanvasGroup canvasGroup = nextLevelBtnObj.GetComponent<CanvasGroup>();
                     canvasGroup.alpha = 1f; // make visible
                     canvasGroup.blocksRaycasts = true; // allow to receive input
@@ -289,9 +292,13 @@ public class UIManager : MonoBehaviour
 
                     // hide next level button
                     Debug.Log("Hiding Next level Btn");
+                    Text nextLvlBtnText = nextLevelBtn.GetComponentInChildren<Text>();
+                    nextLvlBtnText.text = "Credits";
                     CanvasGroup canvasGroup = nextLevelBtnObj.GetComponent<CanvasGroup>();
-                    canvasGroup.alpha = 0f; // make transparent
-                    canvasGroup.blocksRaycasts = false; // prevent from receiving input
+                    canvasGroup.alpha = 1f; // make visible
+                    canvasGroup.blocksRaycasts = true; // allow to receive input
+                    //canvasGroup.alpha = 0f; // make transparent
+                    //canvasGroup.blocksRaycasts = false; // prevent from receiving input
                 }
             }
             else

@@ -30,8 +30,18 @@ public class Bullet : MonoBehaviour
     // Update is called once per frame
     protected virtual void Update()
     {
-        transform.position += transform.right * bulletSpeed;
-
+        //transform.position += transform.right * bulletSpeed;
+        if (target != null)
+        {
+            transform.position = Vector3.MoveTowards(
+                transform.position,
+                target.transform.position,
+                bulletSpeed);
+        }
+        else
+        {
+            transform.position += transform.right * bulletSpeed;
+        }
     }
 
     protected virtual void OnCollisionEnter2D(Collision2D collision)

@@ -147,7 +147,6 @@ MonoBehaviour:
   timeBetweenWaves: 5
   timeBeforeRoundStarts: 4
   timeBetweenMobSpawns: 2.5
-  timeVariable: 0
   isRoundGoing: 0
   isIntermission: 0
   isStartOfRound: 1
@@ -305,7 +304,7 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 218182285}
-  m_RootOrder: 2
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
@@ -484,8 +483,8 @@ RectTransform:
   m_Children:
   - {fileID: 1025576765}
   - {fileID: 352129565}
-  - {fileID: 150635410}
   - {fileID: 1667004883}
+  - {fileID: 150635410}
   m_Father: {fileID: 0}
   m_RootOrder: 11
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -3127,7 +3126,7 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 218182285}
-  m_RootOrder: 3
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
