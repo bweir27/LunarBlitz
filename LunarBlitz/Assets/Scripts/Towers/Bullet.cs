@@ -5,7 +5,6 @@ using UnityEngine;
 
 public class Bullet : MonoBehaviour
 {
-
     [SerializeField] protected float bulletSpeed;
     [SerializeField] public float damage;
     public GameObject ExplosionPrefab;
@@ -57,15 +56,6 @@ public class Bullet : MonoBehaviour
             Debug.Log("No Particle System found!");
         }
 
-        //gameObject.
         Destroy(gameObject);
     }
-
-    //protected IEnumerator WaitForExplosionAnimation()
-    //{
-    //    do
-    //    {
-    //        yield return null;
-    //    } while(OnHitParticleSystem.)
-    //}
 }

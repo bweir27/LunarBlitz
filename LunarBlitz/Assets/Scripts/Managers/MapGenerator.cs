@@ -34,28 +34,6 @@ public class MapGenerator : MonoBehaviour
         generatePlannedMap();
     }
 
-    private List<GameObject> getTopEdgeTiles()
-    {
-        List<GameObject> edgeTiles = new List<GameObject>();
-        for(int i = mapWidth * (mapHeight-1); i < mapWidth * mapHeight; i++)
-        {
-            edgeTiles.Add(mapTiles[i]);
-        }
-
-        return edgeTiles;
-    }
-
-    private List<GameObject> getBottomEdgeTiles()
-    {
-        List<GameObject> edgeTiles = new List<GameObject>();
-        for(int i = 0; i < mapWidth; i++)
-        {
-            edgeTiles.Add(mapTiles[i]);
-        }
-
-        return edgeTiles;
-    }
-
     // For Planned Map
     private GameObject PlannedStartTile()
     {
@@ -70,28 +48,22 @@ public class MapGenerator : MonoBehaviour
                 return renderer.sprite == PathTileSprite;
             });
     }
-    private List<GameObject> getLeftEdgeTiles()
-    {
-        List<GameObject> edgeTiles = new List<GameObject>();
-        for (int i = mapWidth; i < mapWidth * mapHeight; i++)
-        {
-            edgeTiles.Add(mapTiles[i]);
-        }
-
-        return edgeTiles;
-    }
 
     private void generatePlannedMap()
     {
         BoundsInt bounds = Map.cellBounds;
         mapWidth = bounds.size.x;
         mapHeight = bounds.size.y;
+
         TileBase[] allTiles = Map.GetTilesBlock(bounds);
+
+        //get offset of tiles to align properly with tilemap
         float xOffset = Map.tileAnchor.x;
         float yOffset = Map.tileAnchor.y;
         
         int orX = bounds.x;
         int orY = bounds.y;
+
         List<GameObject> tempPathTiles = new List<GameObject>();
         for (int x = 0; x < bounds.size.x; x++)
         {
@@ -210,22 +182,4 @@ public class MapGenerator : MonoBehaviour
         
         return res;
     }
-
-    
-    //private void generatePlannedPath()
-    //{
-    //    List<GameObject> topEdgeTiles = getTopEdgeTiles();
-    //    List<GameObject> bottomEdgeTiles = getBottomEdgeTiles();
-
-
-    //    foreach (GameObject obj in pathTiles)
-    //    {
-    //        obj.GetComponent<SpriteRenderer>().color = PathColor;
-    //        obj.GetComponent<SpriteRenderer>().sprite = PathTileSprite;
-    //    }
-
-    //    startTile.GetComponent<SpriteRenderer>().color = StartTileColor;
-    //    endTile.GetComponent<SpriteRenderer>().color = EndTileColor;
-    //}
-
 }

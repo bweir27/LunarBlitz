@@ -34,7 +34,7 @@ public class Tower : MonoBehaviour
 
     private void Awake()
     {
-        Towers.towers.Add(gameObject);
+        Towers.activeTowers.Add(gameObject);
         isActive = true;
     }
 
@@ -103,7 +103,7 @@ public class Tower : MonoBehaviour
             {
                 if (hit.collider.gameObject.name == gameObject.name)
                 {
-                    Debug.Log("Hovering over " + gameObject.name + ", isActive = " + isActive);
+                    //Debug.Log("Hovering over " + gameObject.name + ", isActive = " + isActive);
                     showRangeDisplay();
                 }
                 else
@@ -224,6 +224,6 @@ public class Tower : MonoBehaviour
     public virtual void shutdownTower()
     {
         isActive = false;
-        Debug.Log(gameObject.name + " active: " + isActive);
+        //Debug.Log(gameObject.name + " active: " + isActive);
     }
 }

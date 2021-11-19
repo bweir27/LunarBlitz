@@ -244,7 +244,6 @@ public class UIManager : MonoBehaviour
             gameWinDisplayRect.offsetMax = new Vector2(0, 0);
 
             gameWinDisplayRect.anchoredPosition = new Vector2(0, 0);
-
         }
         else
         {
@@ -279,6 +278,7 @@ public class UIManager : MonoBehaviour
                     nextLevelBtn.onClick.AddListener(clickNextLevelBtn);
 
                     // show next level button
+                    Debug.Log("Showing Next level Btn");
                     CanvasGroup canvasGroup = nextLevelBtnObj.GetComponent<CanvasGroup>();
                     canvasGroup.alpha = 1f; // make visible
                     canvasGroup.blocksRaycasts = true; // allow to receive input
@@ -288,6 +288,7 @@ public class UIManager : MonoBehaviour
                     Debug.Log("No next level");
 
                     // hide next level button
+                    Debug.Log("Hiding Next level Btn");
                     CanvasGroup canvasGroup = nextLevelBtnObj.GetComponent<CanvasGroup>();
                     canvasGroup.alpha = 0f; // make transparent
                     canvasGroup.blocksRaycasts = false; // prevent from receiving input

@@ -8,7 +8,6 @@ public class PlacementManager : MonoBehaviour
     public ShopManager shopManager;
 
     public Camera cam;
-    [SerializeField] private GameObject defaultTower;
     private GameObject towerToBePlaced;
     private int numTowersPlaced;
 

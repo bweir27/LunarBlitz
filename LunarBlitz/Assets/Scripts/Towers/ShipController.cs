@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Ship1Tower : Tower
+public class ShipController : Tower
 {
     public Transform pivot;
     public Transform barrel;

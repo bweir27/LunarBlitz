@@ -15,15 +15,17 @@ public class LevelManager : MonoBehaviour
     public int[] numMushroomsPerRound;
     public int[] numFlyingEyesPerRound;
     public int[] numGoblinsPerRound;
+    public int[] numBanditsPerRound;
 
-    public GameObject mushroomMob;
-    public GameObject flyingEyeMob;
-    public GameObject goblinMob;
+    //public RoundController[] RoundConfig;
 
-    public Camera cam;
+    private GameObject mushroomMob;
+    private GameObject flyingEyeMob;
+    private GameObject goblinMob;
+    private GameObject banditMob;
+
     [SerializeField] private UIManager uiManager;
 
-    [SerializeField] private Camera MainCamera;
     public float timeBetweenWaves;
     public float timeBeforeRoundStarts;
     public float timeBetweenMobSpawns;
@@ -36,8 +38,10 @@ public class LevelManager : MonoBehaviour
     public bool isGameOver;
     public bool EndScreenDisplayed = false;
 
-    private float minTimeBetweenGoblinSpawns = 0.4f;
-    private float minTimeBetweenMushroomSpawns = 0.65f;
+    private float minTimeBetweenGoblinSpawns = 0.6f;
+    private float minTimeBetweenMushroomSpawns = 0.9f;
+    private float minTimeBetweenFlyingEyeSpawns = 0.8f;
+    private float minTimeBetweenBanditSpawns = 1f;
 
     private PlayerController playerController;
     private Player player;
@@ -51,11 +55,20 @@ public class LevelManager : MonoBehaviour
         isStartOfRound = true;
         isGameOver = false;
 
+        // init Enemies
+        mushroomMob = Enemies.mushroomMob;
+        flyingEyeMob = Enemies.flyingEyeMob;
+        goblinMob = Enemies.goblinMob;
+        banditMob = Enemies.banditMob;
+
+
+
         timeVariable = Time.time + timeBeforeRoundStarts;
         _currRoundNum = 0;
-        uiManager.updateRoundNum(_currRoundNum, NumberOfRounds);
+        uiManager.updateRoundNum(_currRoundNum + 1, NumberOfRounds);
 
         playerController = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>();
+
         if (playerController)
         {
             playerController.SetStartGold(startGold);
@@ -67,9 +80,16 @@ public class LevelManager : MonoBehaviour
         }
 
         sceneLoader = FindObjectOfType<SceneLoader>();
+
         if(sceneLoader == null)
         {
             Debug.LogError("LevelManager could not find SceneLoader!");
+            sceneLoader = GameObject.FindObjectOfType<SceneLoader>();
+        }
+
+        if(uiManager == null)
+        {
+            uiManager = GameObject.FindObjectOfType<UIManager>();
         }
 
         levelNum = sceneLoader.getCurrentSceneNum();
@@ -141,7 +161,7 @@ public class LevelManager : MonoBehaviour
                     {
                         //update round number
                         _currRoundNum++;
-                        uiManager.updateRoundNum(_currRoundNum, NumberOfRounds);
+                        uiManager.updateRoundNum(_currRoundNum + 1, NumberOfRounds);
                         return;
                     }
                 }
@@ -188,36 +208,48 @@ public class LevelManager : MonoBehaviour
         float _mushroomWaitTime;
         float _flyingEyeWaitTime;
         float _goblinWaitTime;
+        float _banditWaitTime;
+
         if (_currRoundNum > 0)
         {
-            _mushroomWaitTime = timeBetweenMobSpawns / _currRoundNum;
+            // make each mob spawn quicker succession on higher rounds
+            _mushroomWaitTime = (timeBetweenMobSpawns * 1.5f) / _currRoundNum;
             _flyingEyeWaitTime = timeBetweenMobSpawns / (2.0f * _currRoundNum);
             _goblinWaitTime = timeBetweenMobSpawns / (1.2f * _currRoundNum);
+            _banditWaitTime = timeBetweenMobSpawns / (1.5f * _currRoundNum);
         }
         else // _currRoundNum == 0
         {
             _mushroomWaitTime = timeBetweenMobSpawns;
             _flyingEyeWaitTime = timeBetweenMobSpawns;
             _goblinWaitTime = timeBetweenMobSpawns;
+            _banditWaitTime = timeBetweenMobSpawns;
         }
 
 
         // Spawn Mushrooms
-        if (numMushroomsPerRound.Length > _currRoundNum)
+        if (numMushroomsPerRound.Length > _currRoundNum && numMushroomsPerRound[_currRoundNum] > 0)
         {
             StartCoroutine(ISpawnMobs(mushroomMob, numMushroomsPerRound[_currRoundNum], _mushroomWaitTime, minTimeBetweenMushroomSpawns));
         }
 
         //Spawn Flying Eyes
-        if (numFlyingEyesPerRound.Length > _currRoundNum)
+        if (numFlyingEyesPerRound.Length > _currRoundNum && numFlyingEyesPerRound[_currRoundNum] > 0)
         {
-            StartCoroutine(ISpawnMobs(flyingEyeMob, numFlyingEyesPerRound[_currRoundNum], _flyingEyeWaitTime, minTimeBetweenGoblinSpawns));
+            StartCoroutine(ISpawnMobs(flyingEyeMob, numFlyingEyesPerRound[_currRoundNum], _flyingEyeWaitTime, minTimeBetweenFlyingEyeSpawns));
         }
 
         // Spawn Goblins
-        if (numGoblinsPerRound.Length > _currRoundNum)
+        if (numGoblinsPerRound.Length > _currRoundNum && numGoblinsPerRound[_currRoundNum] > 0)
         {
             StartCoroutine(ISpawnMobs(goblinMob, numGoblinsPerRound[_currRoundNum], _goblinWaitTime, minTimeBetweenGoblinSpawns));
+        }
+
+        // Spawn Bandits
+        if (numBanditsPerRound.Length > _currRoundNum && numBanditsPerRound[_currRoundNum] > 0)
+        {
+            Debug.Log("Spawning " + numBanditsPerRound[_currRoundNum] + " " + banditMob.name + "s...");
+            StartCoroutine(ISpawnMobs(banditMob, numBanditsPerRound[_currRoundNum], _banditWaitTime, minTimeBetweenBanditSpawns));
         }
     }
 

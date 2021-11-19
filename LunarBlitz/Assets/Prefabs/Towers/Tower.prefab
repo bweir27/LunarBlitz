@@ -75,7 +75,7 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 1413287945
-  m_SortingLayer: 2
+  m_SortingLayer: 3
   m_SortingOrder: 0
   m_Sprite: {fileID: -2413806693520163455, guid: 5e175f5663a644aadb2a837551a86953, type: 3}
   m_Color: {r: 0, g: 0.027116776, b: 1, a: 1}
@@ -101,9 +101,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   towerPreviewSprite: {fileID: 21300000, guid: 6694a83cc1b2144e48b41e319112b83b, type: 3}
-  range: 2.6
-  damage: 7
-  timeBetweenShots: 0.65
+  range: 2.5
+  damage: 5
+  timeBetweenShots: 0.8
   cost: 70
   towerType: {fileID: 0}
   camera: {fileID: 0}
@@ -321,7 +321,7 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 555350905
-  m_SortingLayer: 4
+  m_SortingLayer: 5
   m_SortingOrder: 0
   m_Sprite: {fileID: 7482667652216324306, guid: 61d232fec76a146cbbb49be2cf7d0b16, type: 3}
   m_Color: {r: 0.4056604, g: 0.4056604, b: 0.4056604, a: 1}
