@@ -50,7 +50,7 @@ MonoBehaviour:
   towerOptions:
   - {fileID: 7712032975936315589, guid: f1a757b04f9e04108a2198c30feeadb9, type: 3}
   - {fileID: 3484120590314907163, guid: fa4af1404188542e5b71bd599602c479, type: 3}
-  spaceBetweenMenuOptions: 20
+  spaceBetweenMenuOptions: 10
   LivesRemainingText: {fileID: 0}
   GoldRemainingText: {fileID: 0}
   RoundNumberText: {fileID: 0}

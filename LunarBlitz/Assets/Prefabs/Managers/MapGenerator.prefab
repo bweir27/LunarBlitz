@@ -47,10 +47,28 @@ MonoBehaviour:
   MapTile: {fileID: 8421604774087507339, guid: a1c6305a04a1e4b3b9398205eff383e6, type: 3}
   MapTileSprite: {fileID: 21300262, guid: aa9f510a84a336543994cb3b86dea09f, type: 3}
   PathTileSprite: {fileID: 21300896, guid: aa9f510a84a336543994cb3b86dea09f, type: 3}
+  possiblePathSprites:
+  - {fileID: 21300896, guid: aa9f510a84a336543994cb3b86dea09f, type: 3}
+  - {fileID: -9094364942011334781, guid: 3b4956191e23141cca666a51aca2f22e, type: 3}
+  - {fileID: 4809686696475310233, guid: 3b4956191e23141cca666a51aca2f22e, type: 3}
+  possibleMapSprites:
+  - {fileID: 21300262, guid: aa9f510a84a336543994cb3b86dea09f, type: 3}
+  - {fileID: -6556388306635765995, guid: 3b4956191e23141cca666a51aca2f22e, type: 3}
+  - {fileID: -6038717789386001687, guid: 3b4956191e23141cca666a51aca2f22e, type: 3}
+  - {fileID: 9143129899544890306, guid: 3b4956191e23141cca666a51aca2f22e, type: 3}
+  - {fileID: -140944798450936043, guid: 3b4956191e23141cca666a51aca2f22e, type: 3}
+  - {fileID: 8026354715560355228, guid: 3b4956191e23141cca666a51aca2f22e, type: 3}
+  - {fileID: 9086019854782130166, guid: 3b4956191e23141cca666a51aca2f22e, type: 3}
+  - {fileID: -542583641649580528, guid: 3b4956191e23141cca666a51aca2f22e, type: 3}
+  - {fileID: 5685593177392402527, guid: 3b4956191e23141cca666a51aca2f22e, type: 3}
+  - {fileID: 5830671622392116843, guid: 3b4956191e23141cca666a51aca2f22e, type: 3}
+  - {fileID: 8220757094685707482, guid: 3b4956191e23141cca666a51aca2f22e, type: 3}
+  - {fileID: -471433727445116240, guid: 3b4956191e23141cca666a51aca2f22e, type: 3}
+  - {fileID: -1508867615307271598, guid: 3b4956191e23141cca666a51aca2f22e, type: 3}
+  - {fileID: -8029352021517191821, guid: 3b4956191e23141cca666a51aca2f22e, type: 3}
+  - {fileID: -2930267649529238073, guid: 3b4956191e23141cca666a51aca2f22e, type: 3}
   PathColor: {r: 0.5283019, g: 0.4519945, b: 0.34140262, a: 1}
   StartTileColor: {r: 0.3066733, g: 1, b: 0, a: 1}
   EndTileColor: {r: 0.9716981, g: 0.45407498, b: 0.33459416, a: 1}
   mapWidth: 11
   mapHeight: 10
-  originX: -5
-  originY: -4
