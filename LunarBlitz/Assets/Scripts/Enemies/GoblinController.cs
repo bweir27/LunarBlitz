@@ -17,7 +17,6 @@ public class GoblinController : Enemy
     public override void moveEnemyTowards(Vector3 targetDest)
     {
         base.moveEnemyTowards(targetDest);
-        //animator.SetBool("IsMoving", true);
     }
 
     protected override void checkPosition()
@@ -27,21 +26,11 @@ public class GoblinController : Enemy
 
     protected override void die()
     {
-        //remove before animation so towers stop targeting it
-        Enemies.enemies.Remove(gameObject);
-        movementSpeed = 0;
-
-        // reward gold 
-        playerController.AddMoney(killReward);
-        //Debug.Log("Goblin killed, rewarded +" + killReward);
-        //TODO: animate death
-        //animator.SetBool("IsDead", true);
-        Destroy(transform.gameObject);
+        base.die();
     }
 
     private IEnumerator WaitForAnimation()
     {
         yield return new WaitForSeconds(animator.GetCurrentAnimatorStateInfo(0).length + animator.GetCurrentAnimatorStateInfo(0).normalizedTime);
-
     }
 }

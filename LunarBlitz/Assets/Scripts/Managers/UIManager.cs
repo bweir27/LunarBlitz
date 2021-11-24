@@ -1,5 +1,7 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
@@ -8,9 +10,11 @@ public class UIManager : MonoBehaviour
 {
     public Canvas canvas;
     public PlacementManager placementManager;
+    private ShopManager shopManager;
     public GameObject towerShopContainer;
     public GameObject towerShopUIPrefab;
     public Tower[] towerOptions;
+    private List<GameObject> towerOptionUIList;
     [SerializeField] private float spaceBetweenMenuOptions;
 
     private int _livesRemaining;
@@ -39,22 +43,34 @@ public class UIManager : MonoBehaviour
         {
             spaceBetweenMenuOptions = 0.5f;
         }
-        initTowerMenu();
+        towerOptionUIList = initTowerMenu();
+        shopManager = FindObjectOfType<ShopManager>();
     }
 
-    private void initTowerMenu()
+    
+    // Update is called once per frame
+    void Update()
     {
+        
+    }
+
+    // Dynamically generate the UI elements for each tower with name, price & button
+    private List<GameObject> initTowerMenu()
+    {
+        List<GameObject> towerOptionList = new List<GameObject>();
         RectTransform containerRect = towerShopContainer.GetComponent<RectTransform>();
         RectTransform towerPrefabRect = towerShopUIPrefab.GetComponent<RectTransform>();
 
-        
         float prefabWidth = towerPrefabRect.rect.width;
         float xPos = containerRect.rect.xMin + (prefabWidth / 2.0f) - prefabWidth; //containerRect.position.x;
         float yPos = 0;
-        foreach (Tower t in towerOptions) {
+
+        towerOptions = towerOptions.OrderBy(t => t.cost).ToArray();
+        foreach (Tower t in towerOptions)
+        {
             //create option from prefab
             GameObject towerOptionBtn = Instantiate(towerShopUIPrefab);
-            //towerOptionBtn.transform.parent = towerShopContainer.transform;
+
             towerOptionBtn.transform.SetParent(towerShopContainer.transform, false);
 
             //position it within the parent
@@ -62,7 +78,6 @@ public class UIManager : MonoBehaviour
             xPos += spaceBetweenMenuOptions + prefabWidth;
 
             Vector3 setPos = new Vector3(xPos, yPos, currPos.z);
-            //Debug.Log("Positioning " + t.name + " at: " + setPos);
             towerOptionBtn.transform.localPosition = setPos;
 
             //get the children elements
@@ -73,7 +88,7 @@ public class UIManager : MonoBehaviour
 
             //set the values of the children elements depending on the tower
             Image towerPreviewImg = towerPreview.GetComponent<Image>();
-            if(towerPreviewImg == null)
+            if (towerPreviewImg == null)
             {
                 Debug.LogError("No Tower preview Image!");
             }
@@ -89,18 +104,10 @@ public class UIManager : MonoBehaviour
             buyBtn.onClick.RemoveAllListeners();
             buyBtn.onClick.AddListener(() => toggleBuyTower(t.gameObject));
             buyBtn.onClick.AddListener(() => toggleBtnText(buyBtn));
+
+            towerOptionList.Add(towerOptionBtn);
         }
-    }
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-
-    // Dynamically generate the UI elements for each tower with name, price & button
-    public void initTowerBtns()
-    {
-
+        return towerOptionList;
     }
 
     public void toggleBuyTower(GameObject tower)
@@ -130,22 +137,59 @@ public class UIManager : MonoBehaviour
         LivesRemainingText.text = "Lives: " + _livesRemaining.ToString();
     }
 
-    public void updateLivesRemainingText(int lives)
+    public void updateLivesRemainingText(int livesRemaining, int startLives)
     {
-        _livesRemaining = lives;
-        LivesRemainingText.text = "Lives: " + _livesRemaining.ToString();
+        _livesRemaining = livesRemaining;
+        LivesRemainingText.text = "Lives: " + _livesRemaining.ToString() + "/" + startLives.ToString();
     }
 
     public void updateGoldRemainingText(int goldAmt)
     {
         _gold = goldAmt;
         GoldRemainingText.text = _gold.ToString();
+        if(towerOptionUIList != null)
+        {
+            updateTowerBuyBtns();
+        }
+        
     }
 
     public void updateRoundNum(int currRound, int numRounds)
     {
         _roundNum = currRound;
         RoundNumberText.text = "Round: " + _roundNum.ToString() + "/" + numRounds.ToString();
+    }
+
+    public void updateTowerBuyBtns()
+    {
+        // disallow purchasing of towers that are out of price-range
+        if(towerOptionUIList != null && towerOptionUIList.Count > 0)
+        {
+            foreach (GameObject t in towerOptionUIList)
+            {
+                if (t != null)
+                {
+                    GameObject towerCost = t.transform.GetChild(2).gameObject;
+                    GameObject towerBuyBtn = t.transform.GetChild(3).gameObject;
+
+                    // remove the $ from the tower cost, then parse to an int
+                    int parsedCost = Convert.ToInt32(towerCost.GetComponent<Text>().text.Substring(1));
+
+                    // disable the buy button depending on whether or not player can afford it
+                    Button buyBtn = towerBuyBtn.GetComponent<Button>();
+                    bool canAffordTower = shopManager.PlayerCanAfford(parsedCost);
+
+                    // since the towers are sorted by cost,
+                    //      we can assume that if we weren't able to afford this tower last time,
+                    //      and we still can't, then we can assume the same holds true for the rest of them
+                    if(!canAffordTower && !buyBtn.interactable)
+                    {
+                        break;
+                    }
+                    buyBtn.interactable = canAffordTower;
+                }
+            }
+        }
     }
 
     private void setupGameEndDisplay()
@@ -192,15 +236,10 @@ public class UIManager : MonoBehaviour
             gameWinDisplay.transform.localPosition = gameEndDisplayCenter;
             RectTransform gameWinDisplayRect = gameWinDisplay.GetComponent<RectTransform>();
 
-            Debug.Log("gameWinDisplayRect.offsetMin BEFORE: " + gameWinDisplayRect.offsetMin);
-
             gameWinDisplayRect.offsetMin = new Vector2(0, 0);
             gameWinDisplayRect.offsetMax = new Vector2(0, 0);
 
-            Debug.Log("gameWinDisplayRect.offsetMin AFTER: " + gameWinDisplayRect.offsetMin);
-
             gameWinDisplayRect.anchoredPosition = new Vector2(0, 0);
-
         }
         else
         {
@@ -228,30 +267,31 @@ public class UIManager : MonoBehaviour
             if (nextLevelBtn != null)
             {
                 nextLevelBtn.onClick.RemoveAllListeners();
+                nextLevelBtn.onClick.AddListener(clickNextLevelBtn);
 
                 // if there is a next level
-                if(nextLevelBuildIndex < SceneManager.sceneCountInBuildSettings)
+                if (nextLevelBuildIndex < SceneManager.sceneCountInBuildSettings - 1)
                 {
-                    nextLevelBtn.onClick.AddListener(clickNextLevelBtn);
-
                     // show next level button
+                    //Debug.Log("Showing Next level Btn");
+                    Text nextLvlBtnText = nextLevelBtn.GetComponentInChildren<Text>();
+                    nextLvlBtnText.text = "Next Level";
                     CanvasGroup canvasGroup = nextLevelBtnObj.GetComponent<CanvasGroup>();
                     canvasGroup.alpha = 1f; // make visible
                     canvasGroup.blocksRaycasts = true; // allow to receive input
                 }
                 else
                 {
-                    Debug.Log("No next level");
+                    //Debug.Log("No next level");
 
                     // hide next level button
+                    //Debug.Log("Hiding Next level Btn");
+                    Text nextLvlBtnText = nextLevelBtn.GetComponentInChildren<Text>();
+                    nextLvlBtnText.text = "Credits";
                     CanvasGroup canvasGroup = nextLevelBtnObj.GetComponent<CanvasGroup>();
-                    canvasGroup.alpha = 0f; // make transparent
-                    canvasGroup.blocksRaycasts = false; // prevent from receiving input
+                    canvasGroup.alpha = 1f; // make visible
+                    canvasGroup.blocksRaycasts = true; // allow to receive input
                 }
-            }
-            else
-            {
-                Debug.Log("No Next level!");
             }
         }
         else
@@ -312,13 +352,18 @@ public class UIManager : MonoBehaviour
         gameLoseDisplay.transform.SetParent(gameEndDisplayRect, false);
         Vector3 currPos = gameLoseDisplay.transform.position;
 
+        RectTransform gameLoseDisplayRect = gameLoseDisplay.GetComponent<RectTransform>();
 
-        
+        gameLoseDisplayRect.offsetMin = new Vector2(0, 0);
+        gameLoseDisplayRect.offsetMax = new Vector2(0, 0);
+
+        gameLoseDisplayRect.anchoredPosition = new Vector2(0, 0);
+
         Image gameLoseImg = gameLoseDisplay.GetComponent<Image>();
         if (gameLoseImg != null)
         {
             gameLoseImg.raycastTarget = true;
-            Debug.Log(gameLoseImg.color);
+            //Debug.Log("GameLoseImg.Color: " + gameLoseImg.color);
         }
 
         Vector3 setPos = new Vector3(xPos, yPos, currPos.z);
@@ -411,7 +456,6 @@ public class UIManager : MonoBehaviour
 
     public void clickSaveGameBtn()
     {
-        Debug.Log("Save Game btn clicked");
         GameModel gameModel = FindObjectOfType<GameModel>();
         if(gameModel != null)
         {

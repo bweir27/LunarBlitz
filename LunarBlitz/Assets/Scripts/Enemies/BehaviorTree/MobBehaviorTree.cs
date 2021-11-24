@@ -78,7 +78,7 @@ public class MobBehaviorTree : MonoBehaviour
             //Mob has successfully reached the end, take lives
             PlayerController playerController = FindObjectOfType<PlayerController>();
             Enemy enemy = gameObject.GetComponent<Enemy>();
-            playerController.loseLives(enemy.damage);
+            playerController.loseLives(enemy.livesCost);
 
             // destroy the mob
             Enemies.enemies.Remove(gameObject);

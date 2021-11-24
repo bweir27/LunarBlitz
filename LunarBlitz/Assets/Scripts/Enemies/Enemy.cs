@@ -7,53 +7,49 @@ using UnityEngine.UI;
 public class Enemy : MonoBehaviour
 {
     [SerializeField] public float remainingHealth;
-    [SerializeField] public float startHealth; // TODO: Will be used for healthbar
+    [SerializeField] public float startHealth; // Will be used for healthbar
 
     public GameObject healthBarUI;
     public Slider healthBarSlider;
 
     [SerializeField] public float movementSpeed;
     public float DistanceCovered { get; set; }
+    public int killReward; // The amount of money the played gets when this enemy is killed
+    public int livesCost; // The amount of damage the enemy does when it reached the end
 
     [SerializeField] protected Sprite mobSkin;
-    [SerializeField] protected Animator animator; //TODO: attach animations to mobs
+    [SerializeField] protected Animator animator; // attach animations to mobs
 
     protected PlayerController playerController;
-    public int killReward; // The amount of money the played gets when this enemy is killed
-
+    
     protected bool hasReachedEnd = false;
-    public int damage; // The amount of damage the enemy does when it reached the end
-
-    //public GameObject targetTile;
-
+    
     void Awake()
     {
         remainingHealth = startHealth;
         Enemies.enemies.Add(gameObject);
         healthBarUI.GetComponent<Canvas>().worldCamera = Camera.main;
+        
     }
 
     public virtual void Start()
     {
         initEnemy();
         playerController = FindObjectOfType<PlayerController>();
+
+        //hide healthbar by default
+        if(healthBarUI.GetComponent<Canvas>().enabled)
+        {
+            showHealthBar(false);
+        }
+        animator.SetBool("IsMoving", true);
     }
 
     public virtual void Update()
     {
-        checkPosition();
-        //moveEnemy();
-        takeDamage(0);
         healthBarSlider.value = CalculateHealth();
 
-        // only show healthbar once damage has been taken
-        if(remainingHealth < startHealth)
-        {
-            healthBarUI.SetActive(true);
-            healthBarUI.GetComponent<Canvas>().enabled = true;
-            //Debug.Log("HealthBarUI Active");
-        }
-
+        // If in the future I want a mob that heals others, prevent from having >100% health
         if(remainingHealth > startHealth)
         {
             remainingHealth = startHealth;
@@ -62,8 +58,7 @@ public class Enemy : MonoBehaviour
 
     protected virtual void initEnemy()
     {
-        //targetTile = MapGenerator.startTile;
-        if(mobSkin != null)
+        if(mobSkin == null)
         {
             gameObject.GetComponent<SpriteRenderer>().sprite = mobSkin;
         }
@@ -82,12 +77,11 @@ public class Enemy : MonoBehaviour
     {
         if (collision.gameObject.tag == "Projectile")
         {
-            //Debug.Log("Collision with Projectile detected! " + collision.gameObject.name);
             Bullet b = collision.gameObject.GetComponent<Bullet>();
 
             if(b != null && b.target != null)
             {
-                // prevent "splash" damage when sprites may overlap
+                // prevent "splash" damage when sprites overlap
                 if (b.target.name.Equals(gameObject.name))
                 {
                     takeDamage(b.damage);
@@ -98,30 +92,49 @@ public class Enemy : MonoBehaviour
 
     public virtual void takeDamage(float amount)
     {
+        // only show healthbar once damage has been taken for the first time
+        if (remainingHealth == startHealth && amount > 0)
+        {
+            showHealthBar(true);
+        }
+
+
         remainingHealth -= amount;
 
-        // TODO: animate take damage
-        //if(animator != null)
-        //{
-        //    animator.SetBool("IsRunning", true);
-        //    animator.SetBool("IsTakingDamage", true);
-        //}
-
-        if(remainingHealth <= 0)
+        if (remainingHealth <= 0)
         {
             die();
         }
     }
 
-    
+    protected virtual void showHealthBar(bool isShown)
+    {
+        healthBarUI.SetActive(isShown);
+        healthBarUI.GetComponent<Canvas>().enabled = isShown;
+    }
 
     protected virtual void die()
     {
         // reward gold 
         playerController.AddMoney(killReward);
-        //TODO: animate death
+
+        // remove from list of enemies to prevent towers to continue targeting it
         Enemies.enemies.Remove(gameObject);
-        Destroy(gameObject);
+        movementSpeed = 0;
+        showHealthBar(false);
+
+        //animate death
+        animator.SetTrigger("Death");
+
+
+        // wait for animaton to finish before destroying
+        float destroyDelay = animator.GetCurrentAnimatorStateInfo(0).length + 0.25f;
+        Destroy(gameObject, destroyDelay);
+    }
+
+    private IEnumerator WaitForAnimation()
+    {
+        yield return new WaitForSeconds(animator.GetCurrentAnimatorStateInfo(0).length);
     }
 
     public virtual void moveEnemyTowards(Vector3 targetDest)
@@ -137,39 +150,10 @@ public class Enemy : MonoBehaviour
             // Update distance covered to be used in Tower targeting system
             DistanceCovered = DistanceCovered + thisMoveDist;
         }
-
     }
 
     protected virtual void checkPosition()
     {
-        // Ensure target tile exists
-        //if(targetTile != null && targetTile != MapGenerator.endTile)
-        //{
-        //    // Calculate distance between enemy's position and targetTile's position
-        //    float distance = (transform.position - targetTile.transform.position).magnitude;
-
-        //    if(distance < 0.001f)
-        //    {
-        //        int currentIndex = MapGenerator.pathTiles.IndexOf(targetTile);
-
-        //        targetTile = MapGenerator.pathTiles[currentIndex + 1];
-        //    }
-        //}
-
-        //// Detect when mob reaches target tile + decement numLives
-        //if(targetTile == MapGenerator.endTile)
-        //{
-        //    // Calculate distance between enemy's position and targetTile's position
-        //    float distance = (transform.position - targetTile.transform.position).magnitude;
-
-        //    if (distance < 0.001f && !hasReachedEnd)
-        //    {
-        //        playerController.loseLives(damage);
-        //        hasReachedEnd = true;
-        //        // destroy the mob
-        //        Enemies.enemies.Remove(gameObject);
-        //        Destroy(transform.gameObject);
-        //    }
-        //}
+        
     }
 }

@@ -11,6 +11,12 @@ public class MapGenerator : MonoBehaviour
     public Sprite MapTileSprite;
     public Sprite PathTileSprite;
 
+    public List<Sprite> possiblePathSprites = new List<Sprite>();
+    public List<Sprite> possibleMapSprites = new List<Sprite>();
+
+    public HashSet<Sprite> PossiblePathTiles = new HashSet<Sprite>();
+    public HashSet<Sprite> PossibleMapTiles = new HashSet<Sprite>();
+
     public Color PathColor;
     public Color StartTileColor;
     public Color EndTileColor;
@@ -31,29 +37,9 @@ public class MapGenerator : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        PossiblePathTiles.UnionWith(possiblePathSprites);
+        PossibleMapTiles.UnionWith(possibleMapSprites);
         generatePlannedMap();
-    }
-
-    private List<GameObject> getTopEdgeTiles()
-    {
-        List<GameObject> edgeTiles = new List<GameObject>();
-        for(int i = mapWidth * (mapHeight-1); i < mapWidth * mapHeight; i++)
-        {
-            edgeTiles.Add(mapTiles[i]);
-        }
-
-        return edgeTiles;
-    }
-
-    private List<GameObject> getBottomEdgeTiles()
-    {
-        List<GameObject> edgeTiles = new List<GameObject>();
-        for(int i = 0; i < mapWidth; i++)
-        {
-            edgeTiles.Add(mapTiles[i]);
-        }
-
-        return edgeTiles;
     }
 
     // For Planned Map
@@ -70,88 +56,79 @@ public class MapGenerator : MonoBehaviour
                 return renderer.sprite == PathTileSprite;
             });
     }
-    private List<GameObject> getLeftEdgeTiles()
-    {
-        List<GameObject> edgeTiles = new List<GameObject>();
-        for (int i = mapWidth; i < mapWidth * mapHeight; i++)
-        {
-            edgeTiles.Add(mapTiles[i]);
-        }
-
-        return edgeTiles;
-    }
-
-    // Helper function for path generation
-    private void moveDown()
-    {
-        pathTiles.Add(currentTile);
-        currentIndex = mapTiles.IndexOf(currentTile);
-        nextIndex = currentIndex - mapWidth;
-        currentTile = mapTiles[nextIndex];
-    }
-
-    // Helper function for path generation
-    private void moveLeft()
-    {
-        pathTiles.Add(currentTile);
-        currentIndex = mapTiles.IndexOf(currentTile);
-        nextIndex = currentIndex - 1;
-        currentTile = mapTiles[nextIndex];
-    }
-
-    // Helper function for path generation
-    private void moveRight()
-    {
-        pathTiles.Add(currentTile);
-        currentIndex = mapTiles.IndexOf(currentTile);
-        nextIndex = currentIndex + 1;
-        currentTile = mapTiles[nextIndex];
-    }
-    // Helper function for path generation
-    private void moveUp()
-    {
-        pathTiles.Add(currentTile);
-        currentIndex = mapTiles.IndexOf(currentTile);
-        nextIndex = currentIndex - mapWidth;
-        currentTile = mapTiles[nextIndex];
-    }
 
     private void generatePlannedMap()
     {
         BoundsInt bounds = Map.cellBounds;
         mapWidth = bounds.size.x;
         mapHeight = bounds.size.y;
+
         TileBase[] allTiles = Map.GetTilesBlock(bounds);
-        
+
+        //get offset of tiles to align properly with tilemap
+        float xOffset = Map.tileAnchor.x;
+        float yOffset = Map.tileAnchor.y;
+
+        int mapMinX = (int)(Map.cellBounds.min.x);
+        int mapMinY = (int)(Map.cellBounds.min.y);
+
         int orX = bounds.x;
         int orY = bounds.y;
+
         List<GameObject> tempPathTiles = new List<GameObject>();
         for (int x = 0; x < bounds.size.x; x++)
         {
             for (int y = 0; y < bounds.size.y; y++)
             {
                 TileBase tile = allTiles[x + y * bounds.size.x];
+
                 if (tile != null)
                 {
-                    GameObject newTile = Instantiate(MapTile);
-                    newTile.transform.position = new Vector2(orX + x, orY + y);
-                    if (tile.name.EndsWith(PathTileSprite.name.Substring(PathTileSprite.name.Length - 4)))
+                    int mapPosX = (int)(mapMinX + x);
+                    int mapPosY = (int)(mapMinY + y);
+                    Sprite tileSprite = Map.GetSprite(new Vector3Int(mapPosX, mapPosY, 0));
+                    
+                    if(tileSprite != null)
                     {
-                        newTile.GetComponent<SpriteRenderer>().color = PathColor;
-                        newTile.GetComponent<SpriteRenderer>().sprite = PathTileSprite;
-                        tempPathTiles.Add(newTile);
+
+                        GameObject newTile = Instantiate(MapTile);
+                        newTile.transform.position = new Vector2(orX + x + xOffset, orY + y + yOffset);
+
+                        //if this tile is a pathTile
+                        if(isPathTile(tileSprite))
+                        {
+                            if (tileSprite.name.StartsWith("lunerSurface"))
+                            {
+                                newTile.GetComponent<SpriteRenderer>().color = Color.black;
+                            }
+                            else
+                            {
+                                newTile.GetComponent<SpriteRenderer>().color = Color.white;
+                            }
+                            
+                            newTile.GetComponent<SpriteRenderer>().sprite = tileSprite;
+                            tempPathTiles.Add(newTile);
+                        }
+                        else
+                        {
+                            // not a pathTile
+                            if (tileSprite.name.StartsWith("lunerSurface"))
+                            {
+                                newTile.GetComponent<SpriteRenderer>().color = Color.black;
+                            }
+                            else
+                            {
+                                newTile.GetComponent<SpriteRenderer>().color = Color.white;
+                            }
+                            newTile.GetComponent<SpriteRenderer>().sprite = tileSprite;
+                        }
+                        mapTiles.Add(newTile);
                     }
-                    else
-                    {
-                        newTile.GetComponent<SpriteRenderer>().color = Color.white;
-                        newTile.GetComponent<SpriteRenderer>().sprite = MapTileSprite;
-                    }
-                    mapTiles.Add(newTile);
                 }
             }
         }
 
-        //we want the mobs to move from right -> left
+        // we want the mobs to move from right -> left
         tempPathTiles.Reverse();
         tempPathTiles = pathSort(tempPathTiles, tempPathTiles[0]);
 
@@ -161,25 +138,25 @@ public class MapGenerator : MonoBehaviour
         }
         startTile = tempPathTiles[0];
         startTile.GetComponent<SpriteRenderer>().sprite = MapTile.GetComponent<SpriteRenderer>().sprite;
-        //startTile.GetComponent<SpriteRenderer>().color = StartTileColor;
         startTile.name = "StartTile";
 
         endTile = tempPathTiles[tempPathTiles.Count - 1];
         endTile.GetComponent<SpriteRenderer>().sprite = MapTile.GetComponent<SpriteRenderer>().sprite;
-        //endTile.GetComponent<SpriteRenderer>().color = EndTileColor;
         endTile.name = "EndTile";
 
         pathTiles = tempPathTiles;
     }
 
+    // sorts the path tiles in the order they should be traversed (handles vertical path sections)
     private List<GameObject> pathSort(List<GameObject> pathList, GameObject startTile)
     {
         List<GameObject> sortedPath = new List<GameObject>();
         GameObject curr = startTile;
         GameObject previous = null;
+
+        // this is the startTile
         sortedPath.Add(curr);
 
-        int loopNum = 0;
         while(curr != null)
         {
             GameObject next = findNextStepInPath(pathList, curr, previous);
@@ -191,14 +168,15 @@ public class MapGenerator : MonoBehaviour
             //update vars
             GameObject temp1 = curr;
             GameObject temp2 = previous;
+
             previous = curr;
             curr = next;
-            loopNum++;
         }
 
         return sortedPath;
     }
 
+    // a helper method to find the next tile in the path
     private GameObject findNextStepInPath(List<GameObject> pathList, GameObject current, GameObject previous)
     {
         List<GameObject> path = pathList;
@@ -208,7 +186,10 @@ public class MapGenerator : MonoBehaviour
         
         if(curr != null)
         {
-            // there should only be two
+            // for middle tiles, should only be two,
+            //      one of which we have already seen (the previous tile).
+            //  When we come across the case that there is only neighbor,
+            //      we know that is an endPoint
             List<GameObject> neighbors = path.FindAll(
                 delegate (GameObject obj)
                 {
@@ -219,18 +200,16 @@ public class MapGenerator : MonoBehaviour
 
                     return dist < 1.25f && obj != curr;
                 });
-            int pos = path.IndexOf(curr);
 
+            // if we are looking at a middleTile
             if(neighbors.Count > 0)
             {
-
+                // FIXME: This works under the assumption that there will only be two,
+                //      but could/should be cleaned up for clarity
+                //      and cases where there may be two paths diverging / joining
                 foreach (GameObject obj in neighbors)
                 {
-                    if (prev == null)
-                    {
-                        res = obj;
-                    }
-                    else if (prev != null && prev != obj)
+                    if (prev == null || (prev != null && prev != obj))
                     {
                         res = obj;
                     }
@@ -241,21 +220,8 @@ public class MapGenerator : MonoBehaviour
         return res;
     }
 
-    
-    private void generatePlannedPath()
+    private bool isPathTile(Sprite testSprite)
     {
-        List<GameObject> topEdgeTiles = getTopEdgeTiles();
-        List<GameObject> bottomEdgeTiles = getBottomEdgeTiles();
-
-
-        foreach (GameObject obj in pathTiles)
-        {
-            obj.GetComponent<SpriteRenderer>().color = PathColor;
-            obj.GetComponent<SpriteRenderer>().sprite = PathTileSprite;
-        }
-
-        startTile.GetComponent<SpriteRenderer>().color = StartTileColor;
-        endTile.GetComponent<SpriteRenderer>().color = EndTileColor;
+        return PossiblePathTiles.Contains(testSprite);
     }
-
 }

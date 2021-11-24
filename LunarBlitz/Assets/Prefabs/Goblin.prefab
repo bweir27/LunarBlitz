@@ -75,7 +75,7 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: -1461485217
-  m_SortingLayer: 5
+  m_SortingLayer: 6
   m_SortingOrder: 0
   m_Sprite: {fileID: 4723107735738678597, guid: c1cdd26cc09ad224884556bc4d8296ae, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -101,14 +101,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   remainingHealth: 0
-  startHealth: 25
+  startHealth: 20
   healthBarUI: {fileID: 1760242661928417786}
   healthBarSlider: {fileID: 8773628989798969016}
-  movementSpeed: 0.75
+  movementSpeed: 1
+  killReward: 3
+  livesCost: 1
   mobSkin: {fileID: 0}
   animator: {fileID: 9197840627025307217}
-  killReward: 3
-  damage: 1
 --- !u!114 &3621940802045292403
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -132,7 +132,7 @@ Animator:
   m_GameObject: {fileID: 9197840627025307216}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: 4f230fa6acf87ff4aa55a06a9691101d, type: 2}
+  m_Controller: {fileID: 9100000, guid: 87a2ab29757014e1e9889f09bcc018d4, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0

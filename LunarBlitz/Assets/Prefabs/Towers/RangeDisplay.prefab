@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7625954676976874522}
   - component: {fileID: 3072826660224076426}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: RangeDisplay
   m_TagString: TowerRangeDisplay
   m_Icon: {fileID: 0}
@@ -24,13 +24,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4836977579867595955}
-  m_LocalRotation: {x: 0, y: -0, z: -0.7071068, w: 0.7071068}
+  m_LocalRotation: {x: 0, y: 0, z: -0.7071068, w: 0.7071068}
   m_LocalPosition: {x: 1.5140433, y: -1.9005928, z: 0}
   m_LocalScale: {x: 3.5729465, y: 3.5729465, z: 1.5879753}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: -90}
 --- !u!212 &3072826660224076426
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -69,8 +69,8 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: -1641659403
-  m_SortingLayer: 1
+  m_SortingLayerID: 324611707
+  m_SortingLayer: 2
   m_SortingOrder: 0
   m_Sprite: {fileID: -2413806693520163455, guid: a86470a33a6bf42c4b3595704624658b, type: 3}
   m_Color: {r: 0.5849056, g: 0.5849056, b: 0.5849056, a: 0.45490196}

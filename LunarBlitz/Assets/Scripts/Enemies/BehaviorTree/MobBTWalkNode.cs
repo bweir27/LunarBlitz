@@ -43,8 +43,8 @@ public class MobBTWalkNode : MobBTNode
     {
         Vector3 currPos = Tree.gameObject.transform.position;
 
-        // have we made it to the destination?
-        if (currPos == NextDestination && currPos != MapGenerator.endTile.transform.position)
+        // have we made it to the next Tile? round corners
+        if (DistanceToTarget() <= 0.3 && NextDestination != MapGenerator.endTile.transform.position)
         {
             // fail if we can't find a next destination
             if (!FindNextDestination())
@@ -66,5 +66,10 @@ public class MobBTWalkNode : MobBTNode
             // we're not there yet, so return running
             return Result.Running;
         }
+    }
+
+    private float DistanceFromTarget(Vector3 currPos, Vector3 dest)
+    {
+        return (currPos - dest).magnitude;
     }
 }

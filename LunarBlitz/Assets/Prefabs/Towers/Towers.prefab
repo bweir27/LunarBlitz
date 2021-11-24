@@ -1,0 +1,51 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &5432020884635026315
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 5432020884635026313}
+  - component: {fileID: 5432020884635026312}
+  m_Layer: 0
+  m_Name: Towers
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &5432020884635026313
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5432020884635026315}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -2, y: 0, z: -74.05165}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &5432020884635026312
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5432020884635026315}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6df758eeef88b4474b2ea23b5808270c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  basicTowerPrefab: {fileID: 545278990201884310, guid: f1a757b04f9e04108a2198c30feeadb9, type: 3}
+  shipTowerPrefab: {fileID: 3484120590314907166, guid: fa4af1404188542e5b71bd599602c479, type: 3}
+  rangeDisplayPrefab: {fileID: 4836977579867595955, guid: cb420499b815e43428a5e3d0f029eca1, type: 3}
+  towerPrefabOptions:
+  - {fileID: 545278990201884310, guid: f1a757b04f9e04108a2198c30feeadb9, type: 3}
+  - {fileID: 3484120590314907166, guid: fa4af1404188542e5b71bd599602c479, type: 3}

@@ -32,7 +32,7 @@ public class PlayerController : MonoBehaviour
         if (uiManager)
         {
             uiManager.updateGoldRemainingText(_currGold);
-            uiManager.updateLivesRemainingText(_livesRemaining);
+            uiManager.updateLivesRemainingText(_livesRemaining, LivesAllowed);
         }
     }
 
@@ -74,6 +74,11 @@ public class PlayerController : MonoBehaviour
         return _currGold;
     }
 
+    public bool CanAfford(int cost)
+    {
+        return cost <= _currGold;
+    }
+
     public void AddMoney(int amt)
     {
         _currGold += amt;
@@ -95,6 +100,7 @@ public class PlayerController : MonoBehaviour
 
     public void SetLives(int lives)
     {
+        //Debug.Log("SetLives: " + lives);
         LivesAllowed = lives;
         _livesRemaining = lives;
 
@@ -105,9 +111,9 @@ public class PlayerController : MonoBehaviour
     }
     public void loseLives(int numLivesLost)
     {
-        LivesAllowed = Mathf.Max(LivesAllowed - numLivesLost, 0);
+        //LivesAllowed = Mathf.Max(LivesAllowed - numLivesLost, 0);
         
-        _livesRemaining = LivesAllowed;
+        _livesRemaining = Mathf.Max(_livesRemaining - numLivesLost, 0); ;
 
         if (uiManager)
         {
@@ -136,6 +142,6 @@ public class PlayerController : MonoBehaviour
 
     public void UpdateLivesUI()
     {
-        uiManager.updateLivesRemainingText(_livesRemaining);
+        uiManager.updateLivesRemainingText(_livesRemaining, LivesAllowed);
     }
 }

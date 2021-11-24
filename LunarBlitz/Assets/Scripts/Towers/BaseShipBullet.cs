@@ -14,8 +14,17 @@ public class BaseShipBullet : Bullet
     // Update is called once per frame
     protected override void Update()
     {
-        //base.Update();
-        transform.position += transform.up * bulletSpeed;
+        if(target != null)
+        {
+            transform.position = Vector3.MoveTowards(
+                transform.position,
+                target.transform.position,
+                bulletSpeed);
+        }
+        else
+        {
+            transform.position += transform.up * bulletSpeed;
+        }
     }
 
     protected override void OnCollisionEnter2D(Collision2D collision)

@@ -15,29 +15,31 @@ public class LevelManager : MonoBehaviour
     public int[] numMushroomsPerRound;
     public int[] numFlyingEyesPerRound;
     public int[] numGoblinsPerRound;
+    public int[] numBanditsPerRound;
 
-    public GameObject mushroomMob;
-    public GameObject flyingEyeMob;
-    public GameObject goblinMob;
+    private GameObject mushroomMob;
+    private GameObject flyingEyeMob;
+    private GameObject goblinMob;
+    private GameObject banditMob;
 
-    public Camera cam;
     [SerializeField] private UIManager uiManager;
 
-    [SerializeField] private Camera MainCamera;
     public float timeBetweenWaves;
     public float timeBeforeRoundStarts;
     public float timeBetweenMobSpawns;
 
-    public float timeVariable;
+    private float timeVariable;
 
-    public bool isRoundGoing;
-    public bool isIntermission;
-    public bool isStartOfRound;
-    public bool isGameOver;
-    public bool EndScreenDisplayed = false;
+    [SerializeField] private bool isRoundGoing;
+    [SerializeField] private bool isIntermission;
+    [SerializeField] private bool isStartOfRound;
+    [SerializeField] private bool isGameOver;
+    [SerializeField] private bool EndScreenDisplayed = false;
 
-    private float minTimeBetweenGoblinSpawns = 0.4f;
-    private float minTimeBetweenMushroomSpawns = 0.65f;
+    private float minTimeBetweenGoblinSpawns = 0.6f;
+    private float minTimeBetweenMushroomSpawns = 0.9f;
+    private float minTimeBetweenFlyingEyeSpawns = 0.8f;
+    private float minTimeBetweenBanditSpawns = 1f;
 
     private PlayerController playerController;
     private Player player;
@@ -51,14 +53,25 @@ public class LevelManager : MonoBehaviour
         isStartOfRound = true;
         isGameOver = false;
 
+        // init Enemies
+        mushroomMob = Enemies.mushroomMob;
+        flyingEyeMob = Enemies.flyingEyeMob;
+        goblinMob = Enemies.goblinMob;
+        banditMob = Enemies.banditMob;
+
+        if (uiManager == null)
+        {
+            uiManager = GameObject.FindObjectOfType<UIManager>();
+        }
+
         timeVariable = Time.time + timeBeforeRoundStarts;
         _currRoundNum = 0;
-        uiManager.updateRoundNum(_currRoundNum, NumberOfRounds);
+        uiManager.updateRoundNum(_currRoundNum + 1, NumberOfRounds);
 
         playerController = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>();
+
         if (playerController)
         {
-            Debug.Log("LevelController setting player's gold to: " + startGold);
             playerController.SetStartGold(startGold);
             playerController.SetLives(startLives);
         }
@@ -68,9 +81,11 @@ public class LevelManager : MonoBehaviour
         }
 
         sceneLoader = FindObjectOfType<SceneLoader>();
+
         if(sceneLoader == null)
         {
             Debug.LogError("LevelManager could not find SceneLoader!");
+            sceneLoader = GameObject.FindObjectOfType<SceneLoader>();
         }
 
         levelNum = sceneLoader.getCurrentSceneNum();
@@ -126,14 +141,13 @@ public class LevelManager : MonoBehaviour
                 }
                 else
                 {
-                    isIntermission = true;
                     isRoundGoing = false;
 
                     // reset time
                     timeVariable = Time.time + timeBetweenWaves;
 
                     //check if gameover
-                    if (_currRoundNum + 1 > NumberOfRounds)
+                    if (_currRoundNum + 1 >= NumberOfRounds)
                     {
                         isGameOver = true;
                         isIntermission = false;
@@ -142,7 +156,8 @@ public class LevelManager : MonoBehaviour
                     {
                         //update round number
                         _currRoundNum++;
-                        uiManager.updateRoundNum(_currRoundNum, NumberOfRounds);
+                        uiManager.updateRoundNum(_currRoundNum + 1, NumberOfRounds);
+                        isIntermission = true;
                         return;
                     }
                 }
@@ -152,20 +167,20 @@ public class LevelManager : MonoBehaviour
         }
         else if (isGameOver && !EndScreenDisplayed)
         {
-            Debug.Log("GameOver!");
+            //Debug.Log("GameOver!");
             GameObject playerObj = GameObject.FindGameObjectWithTag("Player");
             if (playerObj != null)
             {
                 EndScreenDisplayed = true;
                 if (checkGameLost())
                 {
-                    Debug.Log("Sorry, you lose!");
+                    //Debug.Log("Sorry, you lose!");
                     uiManager.displayGameLose();
                 }
                 else
                 {
                     // Automatically save on level Win
-                    Debug.Log("Game over, You Win!");
+                    //Debug.Log("Game over, You Win!");
                     uiManager.displayGameWin();
                     player = FindObjectOfType<Player>();
                     if(player != null && levelNum > player.lastCompletedLevel)
@@ -178,6 +193,7 @@ public class LevelManager : MonoBehaviour
             {
                 Debug.LogError("Player not found!");
             }
+            Towers.shutdownTowers();
             return;
         }
     }
@@ -188,36 +204,48 @@ public class LevelManager : MonoBehaviour
         float _mushroomWaitTime;
         float _flyingEyeWaitTime;
         float _goblinWaitTime;
+        float _banditWaitTime;
+
         if (_currRoundNum > 0)
         {
-            _mushroomWaitTime = timeBetweenMobSpawns / _currRoundNum;
+            // make each mob spawn quicker succession on higher rounds
+            _mushroomWaitTime = (timeBetweenMobSpawns * 1.5f) / _currRoundNum;
             _flyingEyeWaitTime = timeBetweenMobSpawns / (2.0f * _currRoundNum);
             _goblinWaitTime = timeBetweenMobSpawns / (1.2f * _currRoundNum);
+            _banditWaitTime = timeBetweenMobSpawns / (1.5f * _currRoundNum);
         }
         else // _currRoundNum == 0
         {
             _mushroomWaitTime = timeBetweenMobSpawns;
             _flyingEyeWaitTime = timeBetweenMobSpawns;
             _goblinWaitTime = timeBetweenMobSpawns;
+            _banditWaitTime = timeBetweenMobSpawns;
         }
 
 
         // Spawn Mushrooms
-        if (numMushroomsPerRound.Length > _currRoundNum)
+        if (numMushroomsPerRound.Length > _currRoundNum && numMushroomsPerRound[_currRoundNum] > 0)
         {
             StartCoroutine(ISpawnMobs(mushroomMob, numMushroomsPerRound[_currRoundNum], _mushroomWaitTime, minTimeBetweenMushroomSpawns));
         }
 
         //Spawn Flying Eyes
-        if (numFlyingEyesPerRound.Length > _currRoundNum)
+        if (numFlyingEyesPerRound.Length > _currRoundNum && numFlyingEyesPerRound[_currRoundNum] > 0)
         {
-            StartCoroutine(ISpawnMobs(flyingEyeMob, numFlyingEyesPerRound[_currRoundNum], _flyingEyeWaitTime, minTimeBetweenGoblinSpawns));
+            StartCoroutine(ISpawnMobs(flyingEyeMob, numFlyingEyesPerRound[_currRoundNum], _flyingEyeWaitTime, minTimeBetweenFlyingEyeSpawns));
         }
 
         // Spawn Goblins
-        if (numGoblinsPerRound.Length > _currRoundNum)
+        if (numGoblinsPerRound.Length > _currRoundNum && numGoblinsPerRound[_currRoundNum] > 0)
         {
             StartCoroutine(ISpawnMobs(goblinMob, numGoblinsPerRound[_currRoundNum], _goblinWaitTime, minTimeBetweenGoblinSpawns));
+        }
+
+        // Spawn Bandits
+        if (numBanditsPerRound.Length > _currRoundNum && numBanditsPerRound[_currRoundNum] > 0)
+        {
+            Debug.Log("Spawning " + numBanditsPerRound[_currRoundNum] + " " + banditMob.name + "s...");
+            StartCoroutine(ISpawnMobs(banditMob, numBanditsPerRound[_currRoundNum], _banditWaitTime, minTimeBetweenBanditSpawns));
         }
     }
 
@@ -229,7 +257,19 @@ public class LevelManager : MonoBehaviour
             GameObject mob = Instantiate(mobToSpawn, MapGenerator.startTile.transform.position, Quaternion.identity);
             mob.name = mobToSpawn.name + "" + i;
             float _decidedWaitTime = Mathf.Max(mobWaitTime, minTimeBetweenSpawn);
-            yield return new WaitForSeconds(_decidedWaitTime);
+
+            // spawn each enemy in batches of 10
+            bool batchInterval = _decidedWaitTime == minTimeBetweenSpawn && i > 0 && i % 10 == 0 && (numMobsToSpawn - i) > 4.0f;
+            if (batchInterval)
+            {
+                //Debug.Log("Waiting between " + mobToSpawn.name + " batches...");
+                yield return new WaitForSeconds(minTimeBetweenSpawn * 3.5f);
+            }
+            else
+            {
+                yield return new WaitForSeconds(_decidedWaitTime);
+            }
+            
         }
     }
 
@@ -240,7 +280,7 @@ public class LevelManager : MonoBehaviour
 
     public bool checkGameWon()
     {
-        if (_currRoundNum + 1 > NumberOfRounds)
+        if (Enemies.enemies.Count <= 0 && _currRoundNum + 1 > NumberOfRounds)
         {
             isGameOver = true;
             return true;

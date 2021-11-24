@@ -5,10 +5,11 @@ using UnityEngine;
 public class MobBTNode
 {
     // Running -> Mob is still moving toward end Tile
-    // Failure -> Mob has been killed
+    // Failure -> Mob has been killed (isn't actually tracked by BTNode)
     // Success -> Mob has reached end Tile
     public enum Result { Running, Failure, Success };
     public GameObject TargetTile { get; set; }
+    public GameObject EndTile { get; set; }
     protected float movementSpeed;
     
 
