@@ -32,7 +32,6 @@ public class ShopManager : MonoBehaviour
 
     public void BuyTower(GameObject towerPrefab)
     {
-        //Debug.Log(towerPrefab.name + " bought!");
         playerController.RemoveMoney(GetTowerCost(towerPrefab));
     }
 

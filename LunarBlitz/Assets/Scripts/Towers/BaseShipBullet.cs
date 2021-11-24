@@ -14,7 +14,6 @@ public class BaseShipBullet : Bullet
     // Update is called once per frame
     protected override void Update()
     {
-        //base.Update();
         if(target != null)
         {
             transform.position = Vector3.MoveTowards(

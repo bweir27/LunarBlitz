@@ -34,7 +34,6 @@ public class Towers : MonoBehaviour
 
     public static void shutdownTowers()
     {
-        //Debug.Log("Shutting down towers...");
         activeTowers.ForEach(t =>
         {
             if(t != null)
@@ -42,7 +41,6 @@ public class Towers : MonoBehaviour
                 Tower tower = t.GetComponent<Tower>();
                 if (tower != null)
                 {
-                    //Debug.Log("Shutting down " + tower.name + "...");
                     tower.shutdownTower();
                 }
             }

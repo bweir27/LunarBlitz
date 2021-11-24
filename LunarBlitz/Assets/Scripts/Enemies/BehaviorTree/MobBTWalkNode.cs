@@ -13,7 +13,6 @@ public class MobBTWalkNode : MobBTNode
         TargetTile = MapGenerator.startTile;
         movementSpeed = Tree.gameObject.GetComponent<Enemy>().movementSpeed;
         thisMob = Tree.gameObject.GetComponent<Enemy>();
-
     }
 
     public bool FindNextDestination()

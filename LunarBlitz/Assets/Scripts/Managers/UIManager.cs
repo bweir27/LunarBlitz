@@ -47,6 +47,14 @@ public class UIManager : MonoBehaviour
         shopManager = FindObjectOfType<ShopManager>();
     }
 
+    
+    // Update is called once per frame
+    void Update()
+    {
+        
+    }
+
+    // Dynamically generate the UI elements for each tower with name, price & button
     private List<GameObject> initTowerMenu()
     {
         List<GameObject> towerOptionList = new List<GameObject>();
@@ -58,7 +66,8 @@ public class UIManager : MonoBehaviour
         float yPos = 0;
 
         towerOptions = towerOptions.OrderBy(t => t.cost).ToArray();
-        foreach (Tower t in towerOptions) {
+        foreach (Tower t in towerOptions)
+        {
             //create option from prefab
             GameObject towerOptionBtn = Instantiate(towerShopUIPrefab);
 
@@ -79,7 +88,7 @@ public class UIManager : MonoBehaviour
 
             //set the values of the children elements depending on the tower
             Image towerPreviewImg = towerPreview.GetComponent<Image>();
-            if(towerPreviewImg == null)
+            if (towerPreviewImg == null)
             {
                 Debug.LogError("No Tower preview Image!");
             }
@@ -100,21 +109,9 @@ public class UIManager : MonoBehaviour
         }
         return towerOptionList;
     }
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-
-    // Dynamically generate the UI elements for each tower with name, price & button
-    public void initTowerBtns()
-    {
-
-    }
 
     public void toggleBuyTower(GameObject tower)
     {
-        //Debug.Log("Buy Btn Clicked");
         placementManager.toggleBuilding(tower);
     }
 
@@ -148,7 +145,6 @@ public class UIManager : MonoBehaviour
 
     public void updateGoldRemainingText(int goldAmt)
     {
-        //Debug.Log("updateGoldRemainingText: " + goldAmt);
         _gold = goldAmt;
         GoldRemainingText.text = _gold.ToString();
         if(towerOptionUIList != null)
@@ -276,10 +272,8 @@ public class UIManager : MonoBehaviour
                 // if there is a next level
                 if (nextLevelBuildIndex < SceneManager.sceneCountInBuildSettings - 1)
                 {
-                    //nextLevelBtn.onClick.AddListener(clickNextLevelBtn);
-
                     // show next level button
-                    Debug.Log("Showing Next level Btn");
+                    //Debug.Log("Showing Next level Btn");
                     Text nextLvlBtnText = nextLevelBtn.GetComponentInChildren<Text>();
                     nextLvlBtnText.text = "Next Level";
                     CanvasGroup canvasGroup = nextLevelBtnObj.GetComponent<CanvasGroup>();
@@ -288,22 +282,16 @@ public class UIManager : MonoBehaviour
                 }
                 else
                 {
-                    Debug.Log("No next level");
+                    //Debug.Log("No next level");
 
                     // hide next level button
-                    Debug.Log("Hiding Next level Btn");
+                    //Debug.Log("Hiding Next level Btn");
                     Text nextLvlBtnText = nextLevelBtn.GetComponentInChildren<Text>();
                     nextLvlBtnText.text = "Credits";
                     CanvasGroup canvasGroup = nextLevelBtnObj.GetComponent<CanvasGroup>();
                     canvasGroup.alpha = 1f; // make visible
                     canvasGroup.blocksRaycasts = true; // allow to receive input
-                    //canvasGroup.alpha = 0f; // make transparent
-                    //canvasGroup.blocksRaycasts = false; // prevent from receiving input
                 }
-            }
-            else
-            {
-                Debug.Log("No Next level!");
             }
         }
         else

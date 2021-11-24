@@ -71,7 +71,6 @@ public class MapGenerator : MonoBehaviour
 
         int mapMinX = (int)(Map.cellBounds.min.x);
         int mapMinY = (int)(Map.cellBounds.min.y);
-        Debug.Log($"MapMin: ({mapMinX}, {mapMinY})");
 
         int orX = bounds.x;
         int orY = bounds.y;
@@ -83,41 +82,19 @@ public class MapGenerator : MonoBehaviour
             {
                 TileBase tile = allTiles[x + y * bounds.size.x];
 
-                //Tile tileTwo = Map.GetTile()
-                //int mapPosX = (int)(x + Map.cellBounds.min.x);
-                //int mapPosY = (int)(y + Map.cellBounds.min.y);
-                //Debug.Log($"MapPos: ({mapPosX}, {mapPosY})");
-                //Sprite tileSprite = Map.GetSprite(
-                //    new Vector3Int(
-                //        mapPosX,
-                //        mapPosY, 0));
-
-                //Debug.Log("Tile at (" + mapPosX + ", " + mapPosY + ", 0) named \'" + tileSprite.name + "\' isPathTile: " + isPathTile(tileSprite));
-
-                //Sprite tileSprite = tile.GetTileData(
-                //    new Vector3Int(
-                //        (int)(x - Map.localBounds.min.x),
-                //        (int)(y - Map.localBounds.min.y), 0), Map, out tileData);
-
                 if (tile != null)
                 {
                     int mapPosX = (int)(mapMinX + x);
                     int mapPosY = (int)(mapMinY + y);
                     Sprite tileSprite = Map.GetSprite(new Vector3Int(mapPosX, mapPosY, 0));
-                    //Debug.Log($"MapPos: ({mapPosX}, {mapPosY})");
-                    //Sprite tileSprite = Map.GetSprite(
-                    //    new Vector3Int(
-                    //        mapPosX,
-                    //        mapPosY, 0));
+                    
                     if(tileSprite != null)
                     {
-                        //Debug.Log("Tile at (" + mapPosX + ", " + mapPosY + ", 0) named \'" + tileSprite.name + "\' isPathTile: " + isPathTile(tileSprite));
 
                         GameObject newTile = Instantiate(MapTile);
                         newTile.transform.position = new Vector2(orX + x + xOffset, orY + y + yOffset);
 
                         //if this tile is a pathTile
-                        //if (tile.name.EndsWith(PathTileSprite.name.Substring(PathTileSprite.name.Length - 4)))
                         if(isPathTile(tileSprite))
                         {
                             if (tileSprite.name.StartsWith("lunerSurface"))
@@ -143,13 +120,10 @@ public class MapGenerator : MonoBehaviour
                             {
                                 newTile.GetComponent<SpriteRenderer>().color = Color.white;
                             }
-                            //newTile.GetComponent<SpriteRenderer>().color = Color.black;
                             newTile.GetComponent<SpriteRenderer>().sprite = tileSprite;
                         }
                         mapTiles.Add(newTile);
                     }
-
-
                 }
             }
         }

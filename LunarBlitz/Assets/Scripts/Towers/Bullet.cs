@@ -22,7 +22,6 @@ public class Bullet : MonoBehaviour
         if (ExplosionPrefab)
         {
             OnHitParticleSystem = ExplosionPrefab.GetComponent<ParticleSystem>();
-            //OnHitParticleSystem.emission.rateOverTime = 0;
         }
         
     }
@@ -30,7 +29,6 @@ public class Bullet : MonoBehaviour
     // Update is called once per frame
     protected virtual void Update()
     {
-        //transform.position += transform.right * bulletSpeed;
         if (target != null)
         {
             transform.position = Vector3.MoveTowards(
@@ -49,7 +47,6 @@ public class Bullet : MonoBehaviour
         if (collision.collider.tag.Equals("Enemy") && collision.gameObject == target)
         {
             Explode();
-            //Destroy(gameObject);
         }
     }
 
@@ -58,8 +55,6 @@ public class Bullet : MonoBehaviour
         if (OnHitParticleSystem)
         {
             Instantiate(ExplosionPrefab, gameObject.transform.position, Quaternion.identity);
-            //Destroy(ExplosionPrefab, OnHitParticleSystem.main.duration);
-            //OnHitParticleSystem.Emit(10);
         }
         else
         {

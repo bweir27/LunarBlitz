@@ -7,7 +7,7 @@ using UnityEngine.UI;
 public class Enemy : MonoBehaviour
 {
     [SerializeField] public float remainingHealth;
-    [SerializeField] public float startHealth; // TODO: Will be used for healthbar
+    [SerializeField] public float startHealth; // Will be used for healthbar
 
     public GameObject healthBarUI;
     public Slider healthBarSlider;
@@ -16,18 +16,14 @@ public class Enemy : MonoBehaviour
     public float DistanceCovered { get; set; }
     public int killReward; // The amount of money the played gets when this enemy is killed
     public int livesCost; // The amount of damage the enemy does when it reached the end
-    //public float minTimeBetweenSpawns;
 
     [SerializeField] protected Sprite mobSkin;
-    [SerializeField] protected Animator animator; //TODO: attach animations to mobs
+    [SerializeField] protected Animator animator; // attach animations to mobs
 
     protected PlayerController playerController;
     
     protected bool hasReachedEnd = false;
     
-
-    //public GameObject targetTile;
-
     void Awake()
     {
         remainingHealth = startHealth;
@@ -62,7 +58,6 @@ public class Enemy : MonoBehaviour
 
     protected virtual void initEnemy()
     {
-        //targetTile = MapGenerator.startTile;
         if(mobSkin == null)
         {
             gameObject.GetComponent<SpriteRenderer>().sprite = mobSkin;
@@ -82,12 +77,11 @@ public class Enemy : MonoBehaviour
     {
         if (collision.gameObject.tag == "Projectile")
         {
-            //Debug.Log("Collision with Projectile detected! " + collision.gameObject.name);
             Bullet b = collision.gameObject.GetComponent<Bullet>();
 
             if(b != null && b.target != null)
             {
-                // prevent "splash" damage when sprites may overlap
+                // prevent "splash" damage when sprites overlap
                 if (b.target.name.Equals(gameObject.name))
                 {
                     takeDamage(b.damage);
@@ -102,7 +96,6 @@ public class Enemy : MonoBehaviour
         if (remainingHealth == startHealth && amount > 0)
         {
             showHealthBar(true);
-            //Debug.Log("Showing " + gameObject.name + "\'s Healthbar");
         }
 
 
@@ -122,10 +115,10 @@ public class Enemy : MonoBehaviour
 
     protected virtual void die()
     {
-        //Debug.Log(gameObject.name + " die()");
         // reward gold 
         playerController.AddMoney(killReward);
-        //TODO: animate death
+
+        // remove from list of enemies to prevent towers to continue targeting it
         Enemies.enemies.Remove(gameObject);
         movementSpeed = 0;
         showHealthBar(false);
@@ -135,8 +128,7 @@ public class Enemy : MonoBehaviour
 
 
         // wait for animaton to finish before destroying
-        float destroyDelay = animator.GetCurrentAnimatorStateInfo(0).length + 0.25f; // + animator.GetCurrentAnimatorStateInfo(0).normalizedTime;
-        //Debug.Log("Destroy delay: " + destroyDelay);
+        float destroyDelay = animator.GetCurrentAnimatorStateInfo(0).length + 0.25f;
         Destroy(gameObject, destroyDelay);
     }
 

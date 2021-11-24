@@ -103,7 +103,6 @@ public class Tower : MonoBehaviour
             {
                 if (hit.collider.gameObject.name == gameObject.name)
                 {
-                    //Debug.Log("Hovering over " + gameObject.name + ", isActive = " + isActive);
                     showRangeDisplay();
                 }
                 else

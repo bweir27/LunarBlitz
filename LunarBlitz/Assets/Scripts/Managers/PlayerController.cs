@@ -113,7 +113,7 @@ public class PlayerController : MonoBehaviour
     {
         //LivesAllowed = Mathf.Max(LivesAllowed - numLivesLost, 0);
         
-        _livesRemaining = LivesAllowed;
+        _livesRemaining = Mathf.Max(_livesRemaining - numLivesLost, 0); ;
 
         if (uiManager)
         {

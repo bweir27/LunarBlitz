@@ -17,8 +17,6 @@ public class LevelManager : MonoBehaviour
     public int[] numGoblinsPerRound;
     public int[] numBanditsPerRound;
 
-    //public RoundController[] RoundConfig;
-
     private GameObject mushroomMob;
     private GameObject flyingEyeMob;
     private GameObject goblinMob;
@@ -89,8 +87,6 @@ public class LevelManager : MonoBehaviour
             Debug.LogError("LevelManager could not find SceneLoader!");
             sceneLoader = GameObject.FindObjectOfType<SceneLoader>();
         }
-
-        
 
         levelNum = sceneLoader.getCurrentSceneNum();
     }
@@ -171,20 +167,20 @@ public class LevelManager : MonoBehaviour
         }
         else if (isGameOver && !EndScreenDisplayed)
         {
-            Debug.Log("GameOver!");
+            //Debug.Log("GameOver!");
             GameObject playerObj = GameObject.FindGameObjectWithTag("Player");
             if (playerObj != null)
             {
                 EndScreenDisplayed = true;
                 if (checkGameLost())
                 {
-                    Debug.Log("Sorry, you lose!");
+                    //Debug.Log("Sorry, you lose!");
                     uiManager.displayGameLose();
                 }
                 else
                 {
                     // Automatically save on level Win
-                    Debug.Log("Game over, You Win!");
+                    //Debug.Log("Game over, You Win!");
                     uiManager.displayGameWin();
                     player = FindObjectOfType<Player>();
                     if(player != null && levelNum > player.lastCompletedLevel)
@@ -266,7 +262,7 @@ public class LevelManager : MonoBehaviour
             bool batchInterval = _decidedWaitTime == minTimeBetweenSpawn && i > 0 && i % 10 == 0 && (numMobsToSpawn - i) > 4.0f;
             if (batchInterval)
             {
-                Debug.Log("Waiting between " + mobToSpawn.name + " batches...");
+                //Debug.Log("Waiting between " + mobToSpawn.name + " batches...");
                 yield return new WaitForSeconds(minTimeBetweenSpawn * 3.5f);
             }
             else

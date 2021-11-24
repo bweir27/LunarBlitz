@@ -17,7 +17,6 @@ public class GoblinController : Enemy
     public override void moveEnemyTowards(Vector3 targetDest)
     {
         base.moveEnemyTowards(targetDest);
-        //animator.SetBool("IsMoving", true);
     }
 
     protected override void checkPosition()

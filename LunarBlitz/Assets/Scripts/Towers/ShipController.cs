@@ -7,12 +7,6 @@ public class ShipController : Tower
     public Transform pivot;
     public Transform barrel;
     public GameObject bullet;
-    
-
-    private void Awake()
-    {
-        
-    }
 
     protected override void Start()
     {
